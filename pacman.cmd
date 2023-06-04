@@ -18,3 +18,6 @@ pacman -Syu
 
 * Refresh metadata
 pacman -Sy
+
+* show package info
+pacman -Q --info vim
