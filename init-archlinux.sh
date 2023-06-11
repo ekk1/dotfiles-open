@@ -1,7 +1,8 @@
 pacman -S \
     vim tmux tree git htop man-db \
     nfs-utils smartmontools ranger \
-    chrony dhcpcd dolphin ntfs-3g
+    chrony dhcpcd dolphin ntfs-3g lsof \
+    tig ncdu
 
 pacman -S \
     sway swaybg swayidle swaylock foot dmenu gammastep \
@@ -20,3 +21,7 @@ pacman -S \
 pacman -S \
     brightnessctl \
     upower
+
+# gammastep -O 4500K
+# showmount -e 192.168.xxx
+# mount -t nfs xxxx:/daa12312312 /data01
