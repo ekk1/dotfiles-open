@@ -1,8 +1,22 @@
-pacman -S adobe-source-han-sans-cn-fonts adobe-source-han-serif-cn-fonts
-pacman -S brightnessctl chromium chrony dhcpcd dmenu dolphin efibootmgr
-pacman -S firefox foot gammastep git grub htop i3blocks i3status
-pacman -S intel-gpu-tools intel-media-driver intel-ucode libva-utils
-pacman -S man-db mpv nfs-utils noto-fonts-cjk pavucontrol pipewire-pulse
-pacman -S polkit qt5-wayland qt5ct qt6-wayland ranger smartmontools sway
-pacman -S swaybg swayidle swaylock tmux tree ttf-ubuntu-mono-nerd upower
-pacman -S vim xorg-xwayland
+pacman -S \
+    vim tmux tree git htop man-db \
+    nfs-utils smartmontools ranger \
+    chrony dhcpcd dolphin
+
+pacman -S \
+    sway swaybg swayidle swaylock foot dmenu gammastep \
+    xorg-xwayland qt5-wayland qt6-wayland qt5ct \
+    polkit pipewire-pulse pavucontrol \
+    i3blocks i3status intel-gpu-tools \
+    intel-media-driver mpv libva-utils \
+    chromium firefox
+
+pacman -S \
+    adobe-source-han-sans-cn-fonts \
+    adobe-source-han-serif-cn-fonts \
+    ttf-ubuntu-mono-nerd \
+    noto-fonts-cjk
+
+pacman -S \
+    brightnessctl \
+    upower
