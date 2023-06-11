@@ -1,7 +1,7 @@
 pacman -S \
     vim tmux tree git htop man-db \
     nfs-utils smartmontools ranger \
-    chrony dhcpcd dolphin
+    chrony dhcpcd dolphin ntfs-3g
 
 pacman -S \
     sway swaybg swayidle swaylock foot dmenu gammastep \
