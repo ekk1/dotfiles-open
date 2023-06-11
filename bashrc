@@ -16,9 +16,6 @@ alias giv='grep -iv'
 alias g-='egrep -v "(^$|^#)"'
 alias s='ssh'
 alias py='python3'
-alias gg='git grep'
-alias q='git status'
-alias gc='git commit'
 alias v='vim'
 alias vv='vim ~/.vimrc'
 alias p='generate password'
@@ -26,6 +23,12 @@ alias o='get password'
 alias ww='wget --limit-rate=3000k'
 alias jq='python3 /path/to/jq.py'
 alias rr='ranger'
+
+# Git
+alias gg='git grep'
+alias q='git status'
+alias gc='git commit'
+alias ga='git add'
 
 # PROXY
 function terminalProxyStart() {
