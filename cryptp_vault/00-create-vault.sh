@@ -18,5 +18,8 @@ dd if=/dev/zero of=/dev/mapper/backup2 status=progress
 
 mkfs.ext4 /dev/mapper/backup2
 
+mount /dev/mapper/xxxx /xxxx
+
+
 umount /backup2
 cryptsetup luksClose backup2
