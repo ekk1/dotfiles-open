@@ -1,3 +1,4 @@
+# Common
 alias l='ls'
 alias ll='ls -l'
 alias la='ls -a'
@@ -14,21 +15,56 @@ alias gi='grep -i'
 alias gvi='grep -vi'
 alias giv='grep -iv'
 alias g-='egrep -v "(^$|^#)"'
-alias s='ssh'
+
+# alias
 alias py='python3'
 alias v='vim'
 alias vv='vim ~/.vimrc'
 alias p='generate password'
 alias o='get password'
 alias ww='wget --limit-rate=3000k'
-alias jq='python3 /path/to/jq.py'
+# alias jq='python3 /path/to/jq.py'
 alias rr='ranger'
+
+# SSH
+alias s='ssh'
+alias sss='ssh -D 127.0.0.1:10099'
+alias sp='ssh -o ProxyCommand="/usr/bin/nc -X 5 -x 127.0.0.1:10099 %h %p"'
+function sa {
+    agentCount=$(ps aux | grep ssh-agent | wc -l)
+    if [ $agentCount -eq 2 ]
+    then
+        ssh-agent > ~/tmp-agent.sh
+        chmod 600 ~/tmp-agent.sh
+    else
+        echo "Agent is already running"
+    fi
+}
+alias saa='source ~/tmp-agent.sh'
+function spp {
+    ssh -L 127.0.0.1:$3:$2:$3 $1
+}
 
 # Git
 alias gg='git grep'
 alias q='git status'
 alias gc='git commit'
 alias ga='git add'
+alias gre='git checkout --'
+alias tt="tig"
+alias tb="tig blame"
+alias gg='git grep --ignore-case'
+
+# Quick
+alias ch='chromium --proxy-server=socks5://xxxx:xxx --proxy-bypass-list=192.168.xx --ozone-platform-hint=auto'
+alias ee='rsync -avP ~/.tmux.conf ~/.vimrc'
+alias kn='vim ~/.ssh/known_hosts'
+alias nn='cd ~/works/xxxx'
+alias mm='python3 -m rich.markdown'
+alias mmm='markdown2'
+function md {
+    cat $1 | python3 -m rich.markdown
+}
 
 # PROXY
 function terminalProxyStart() {
@@ -42,12 +78,19 @@ function noterminalProxy() {
 
 # ANSIBLE_RELATED
 alias ae='ansible-vault encrypt_string'
+alias av='ansible-vault view'
+alias ac='ansible-vault create'
 
 # EXPORTS
 export PATH=$PATH
 export EDITOR=vim
 export LC_CTYPE=en_US.UTF-8
-export LC_ALL=en_US.UTF-8
+#export LC_ALL=en_US.UTF-8
+export MOZ_ENABLE_WAYLAND=1
 
-alias ch='chromium --proxy-server=socks5://192.168.xxxx:xxxxx --proxy-bypass-list=192.168.* --ozone-platform-hint=auto'
-# MOZ_ENABLE_WAYLAND=1
+# Powerline
+# powerline-daemon -q
+# POWERLINE_BASH_CONTINUATION=1
+# POWERLINE_BASH_SELECT=1
+# . /usr/share/powerline/bindings/bash/powerline.sh
+
