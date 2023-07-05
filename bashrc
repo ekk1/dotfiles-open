@@ -54,6 +54,7 @@ alias gre='git checkout --'
 alias tt="tig"
 alias tb="tig blame"
 alias gg='git grep --ignore-case'
+alias gd='git diff'
 
 # Quick
 alias ch='chromium --proxy-server=socks5://xxxx:xxx --proxy-bypass-list=192.168.xx --ozone-platform-hint=auto'
@@ -70,7 +71,7 @@ function md {
 function terminalProxyStart() {
     export http_proxy=http://127.0.0.1:8118
     export https_proxy=http://127.0.0.1:8118
-}                                                                                                                                                                                                        
+}
 function noterminalProxy() {
     export http_proxy=
     export https_proxy=
