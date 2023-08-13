@@ -6,7 +6,9 @@ import errno
 import struct
 import signal
 import asyncio
+import base64
 # import time
+import requests
 from argparse import ArgumentParser
 from collections import Counter
 # from time import time
@@ -15,7 +17,10 @@ from hashlib import sha256
 VERSION = "0.12"
 DESCRIPTION = "This is a NBD proxy server."
 BASE_PROJECT_URL = "https://github.com/reidrac/swift-nbd-server"
-STATS_DELAY = 30
+STATS_DELAY = 300
+
+OBJECT_SIZE = 128 * 1024 # 128KB
+
 
 def set_log(debug=False, use_file=None):
     """ Get a logger """
@@ -72,6 +77,14 @@ class Stats(object):
             cache, limit,
             (cache*100.0/limit)
         )
+        self.log.info(
+            "CACHE: %s read_hit=%s, read_miss=%s, write_set=%s, cache_free=%s",
+            self.store,
+            self.store.cache.hit_miss['read_hit'],
+            self.store.cache.hit_miss['read_miss'],
+            self.store.cache.hit_miss['write_set'],
+            self.store.cache.hit_miss['cache_free'],
+        )
 
 class Cache(object):
     """ Cache data in memory """
@@ -81,7 +94,11 @@ class Cache(object):
         self.ref = Counter()
         self.data = dict()
         self.data_checksum = dict()
-
+        self.hit_miss = Counter()
+        # read_hit
+        # read_miss
+        # write_set
+        # cache_free
         self.log = logging.getLogger(__package__)
         self.log.info("cache size: %s", self.limit)
 
@@ -94,11 +111,17 @@ class Cache(object):
             self.ref[object_name] += 1
 
             self.log.debug("cache hit: %s, %s", object_name, self.ref[object_name])
+            self.hit_miss["read_hit"] += 1
             if sha256(self.data[object_name]).digest() != self.data_checksum[object_name]:
+                self.log.warning("Checksum error in cache !!")
+                del self.ref[object_name]
+                del self.data[object_name]
+                del self.data_checksum[object_name]
                 return None
             return self.data[object_name]
 
         self.log.debug("cache miss: %s, %s", object_name, self.ref[object_name])
+        self.hit_miss["read_miss"] += 1
         return default
 
     def set(self, object_name, data, checksum):
@@ -108,6 +131,7 @@ class Cache(object):
         self.ref[object_name] += 1
 
         self.log.debug("cache set: %s, %s", object_name, self.ref[object_name])
+        self.hit_miss["write_set"] += 1
 
         if len(self.data) > self.limit:
             self.log.debug("cache size is over limit (%s > %s)", len(self.data), self.limit)
@@ -115,6 +139,7 @@ class Cache(object):
             for key, _ in less_used:
                 if object_name != key:
                     self.log.debug("cache free: %s, %s", key, self.ref[key])
+                    self.hit_miss["cache_free"] += 1
                     del self.ref[key]
                     del self.data[key]
                     del self.data_checksum[key]
@@ -128,7 +153,7 @@ class Cache(object):
 
 class ObjStorage(object):
     """ Backend storage """
-    def __init__(self, container, object_size, objects, cache: Cache, read_only=False):
+    def __init__(self, container, object_size, objects, cache: Cache, addr, read_only=False):
         # container is the prefix name to store actual data
         self.container = container
         self.lock_file = f"{self.container}.lock"
@@ -145,14 +170,15 @@ class ObjStorage(object):
         self.bytes_out = 0
 
         self.cache = cache
+        self.session = requests.session()
+
+        self.remote_address = addr
 
     def __str__(self):
         return self.container
 
     def lock(self) -> bool:
         """ Prevent further access to backend storage """
-        if not os.path.exists(f"disk.{self.container}.part"):
-            os.mkdir(f"disk.{self.container}.part")
         if os.path.exists(self.lock_file):
             return False
         with open(self.lock_file, 'w+', encoding="utf8") as lock_f:
@@ -258,16 +284,26 @@ class ObjStorage(object):
             return data
 
         # cache miss, try to read from store
-        if not os.path.exists(self.object_name(object_num)):
-            # store miss, return all zero
-            data = b'\0' * self.object_size
-            return data
-
-        # store hit, read data
-        with open(self.object_name(object_num), 'rb') as block_f:
-            data = block_f.read()
-            self.cache.set(object_num, data[32:], data[:32])
-        return data
+        post_data = {
+            "name": self.container,
+            "object_num": object_num
+        }
+        try:
+            r = self.session.post(f"{self.remote_address}/get", data=post_data)
+            if r.status_code == 404:
+                # store miss, return all zero
+                data = b'\0' * self.object_size
+                return data
+            if r.status_code == 500:
+                raise StorageError(errno.ESPIPE, "Failed to read data")
+            if r.status_code == 200:
+                data = base64.urlsafe_b64decode(r.text)
+                if sha256(data[32:]).digest() != data[:32]:
+                    raise StorageError(errno.ESPIPE, "Failed to verify data")
+                self.cache.set(object_num, data[32:], data[:32])
+                return data[32:]
+        except Exception as ex:
+            raise StorageError(errno.ESPIPE, "Failed to read data") from ex
 
     def put_object(self, object_num, data):
         """ Write a block """
@@ -278,12 +314,20 @@ class ObjStorage(object):
         self.bytes_out += self.object_size
         self.cache.set(object_num, data, checksum)
 
+        post_data = {
+            "name": self.container,
+            "object_num": object_num,
+            "data": base64.urlsafe_b64encode(checksum + data).decode()
+        }
+
         try:
-            block_f = os.open(self.object_name(object_num), os.O_RDWR | os.O_CREAT | os.O_SYNC)
-            os.write(block_f, data)
-            os.close(block_f)
+            r = self.session.post(f"{self.remote_address}/set", data=post_data)
+            if r.status_code == 500:
+                raise StorageError(errno.ESPIPE, "Failed to write data")
+            if r.status_code == 200:
+                pass
         except Exception as ex:
-            raise StorageError(errno.ESPIPE, "failed to write object: " + str(ex))
+            raise StorageError(errno.ESPIPE, "failed to write object: " + str(ex)) from ex
 
 class Server(object):
     """ A NBD Server """
@@ -473,11 +517,18 @@ class Server(object):
                 if magic != self.NBD_REQUEST:
                     raise IOError("Bad magic number, disconnecting")
 
+                if cmd == self.NBD_CMD_WRITE:
+                    cmd_literal = "WRITE"
+                elif cmd == self.NBD_CMD_READ:
+                    cmd_literal = "READ"
+                elif cmd == self.NBD_CMD_FLUSH:
+                    cmd_literal = "FLUSH"
+
                 self.log.debug(
-                    "[%s:%s]: cmd=%s, handle=%s, offset=%s, len=%s",
+                    "[%s:%s]: cmd=%s, handle=%s, offset=%s, len=%s, block=%s",
                     host, port,
-                    cmd, handle,
-                    offset, length
+                    cmd_literal, handle,
+                    offset, length, offset // OBJECT_SIZE
                 )
 
                 if cmd == self.NBD_CMD_DISC:
@@ -584,6 +635,10 @@ class Main(object):
                             default="127.0.0.1",
                             help="bind address (default: 127.0.0.1)")
 
+        parser.add_argument("-r", "--remote-address", dest="remote_address",
+                            default="http://127.0.0.1:8000",
+                            help="remote address (default: http://127.0.0.1:8000)")
+
         parser.add_argument("-n", "--name", dest="name",
                             default="test-nbd",
                             help="name of block (default: test-nbd)")
@@ -623,14 +678,14 @@ class Main(object):
         stores = dict()
 
         container = self.args.name
-        object_size = 64 * 1024 # 64KB
-        objects = 16 * 1024 * 1 # = 100GB
+        objects = 8 * 1024 * 100 # = 100GB
         # objects = 1024
         stores[container] = ObjStorage(
             container,
-            object_size,
+            OBJECT_SIZE,
             objects,
-            Cache(int(self.args.cache_limit*1024**2 / object_size)),
+            Cache(int(self.args.cache_limit*1024**2 / OBJECT_SIZE)),
+            self.args.remote_address,
             False,
         )
 
@@ -646,4 +701,18 @@ class Main(object):
 
 if __name__ == "__main__":
     main = Main()
+
+    # import cProfile, pstats, io
+    # from pstats import SortKey
+    # import sys
+    # profiler = cProfile.Profile()
+    # profiler.enable()
+
     main.run()
+
+    # profiler.disable()
+    # s = io.StringIO()
+    # sortby = SortKey.CUMULATIVE
+    # ps = pstats.Stats(profiler, stream=s).sort_stats(sortby)
+    # ps.print_stats()
+    # print(s.getvalue())
