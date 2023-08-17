@@ -51,6 +51,7 @@ set grepprg=rg\ --vimgrep\ --no-heading\ --smart-case
 
 nnoremap <leader><space>    :nohlsearch<CR>
 nnoremap <leader><leader>   :set relativenumber!<CR>:set number!<CR>
+nnoremap <space><space>     :set paste!<CR>
 nnoremap <leader>.  :CtrlPBuffer<CR>            " call ctrlp buffer list
 nnoremap <leader>l  :CtrlPBuffer<CR>            " list all buffers
 " nnoremap <leader>l  :ls<CR>                     " list all buffers
