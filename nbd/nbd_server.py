@@ -197,13 +197,13 @@ class ObjStorage(object):
             raise StorageError(errno.ESPIPE, "Offset out of bounds")
         self.pos = offset
 
-    def read(self, size):
+    async def read(self, size):
         """ Read data from backend storage """
         data = bytearray()
         # remaining bytes to read
         _size = size
         while _size > 0:
-            obj = self.fetch_object(self.object_num)
+            obj = await self.fetch_object(self.object_num)
             if obj == b'':
                 break
 
@@ -220,7 +220,7 @@ class ObjStorage(object):
             self.seek(self.pos + part_size)
         return data
 
-    def write(self, data):
+    async def write(self, data):
         """ Write data to backend storage """
         if self.read_only:
             raise StorageError(errno.EROFS, "Read only storage")
@@ -228,14 +228,14 @@ class ObjStorage(object):
         _data = data[:]
         if self.object_pos != 0:
             # object-align the beginning of data
-            obj = self.fetch_object(self.object_num)
+            obj = await self.fetch_object(self.object_num)
             _data = obj[:self.object_pos] + _data
             self.seek(self.pos - self.object_pos)
 
         reminder = len(_data) % self.object_size
         if reminder != 0:
             # object-align the end of data
-            obj = self.fetch_object(self.object_num + (len(_data) // self.object_size))
+            obj = await self.fetch_object(self.object_num + (len(_data) // self.object_size))
             _data += obj[reminder:]
 
         assert len(_data) % self.object_size == 0, "Data not aligned!"
@@ -243,7 +243,7 @@ class ObjStorage(object):
         offs = 0
         object_num = self.object_num
         while offs < len(_data):
-            self.put_object(object_num, _data[offs:offs+self.object_size])
+            await self.put_object(object_num, _data[offs:offs+self.object_size])
             offs += self.object_size
             object_num += 1
 
@@ -273,7 +273,7 @@ class ObjStorage(object):
         """ Show object name by num """
         return f"disk.{self.container}.part/{str(object_num).zfill(12)}"
 
-    def fetch_object(self, object_num):
+    async def fetch_object(self, object_num):
         """ Fetch a block by object_num """
         if object_num >= self.objects:
             return b''
@@ -305,7 +305,7 @@ class ObjStorage(object):
         except Exception as ex:
             raise StorageError(errno.ESPIPE, "Failed to read data") from ex
 
-    def put_object(self, object_num, data):
+    async def put_object(self, object_num, data):
         """ Write a block """
         if object_num >= self.objects:
             raise StorageError(errno.ESPIPE, "Write offset out of bounds")
@@ -542,7 +542,7 @@ class Server(object):
 
                     try:
                         store.seek(offset)
-                        store.write(data)
+                        await store.write(data)
                     except IOError as ex:
                         self.log.error("[%s:%s] %s", host, port, ex)
                         await self.nbd_response(writer, handle, error=ex.errno)
@@ -554,7 +554,7 @@ class Server(object):
                 elif cmd == self.NBD_CMD_READ:
                     try:
                         store.seek(offset)
-                        data = store.read(length)
+                        data = await store.read(length)
                     except IOError as ex:
                         self.log.error("[%s:%s] %s", host, port, ex)
                         await self.nbd_response(writer, handle, error=ex.errno)
