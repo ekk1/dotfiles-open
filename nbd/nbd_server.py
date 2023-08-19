@@ -320,6 +320,17 @@ class ObjStorage(object):
             "data": base64.urlsafe_b64encode(checksum + data).decode()
         }
 
+        #loop = asyncio.get_running_loop()
+        #coro = asyncio.open_connection("")
+        #r, w = await coro
+
+        #a = loop.create_task(w.write())
+        #asyncio.create_task(w.write())
+        ## loop.
+        #await a
+
+        # loop.create_task
+
         try:
             r = self.session.post(f"{self.remote_address}/set", data=post_data)
             if r.status_code == 500:
