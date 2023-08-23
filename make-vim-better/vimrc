@@ -40,8 +40,8 @@ set hidden
 set scrolloff=8
 
 set autoindent
-set mouse=a
-" set mouse=c
+" set mouse=a
+set mouse=c
 let python_highlight_all = 1
 set ruler
 
