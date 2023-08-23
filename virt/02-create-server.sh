@@ -5,7 +5,7 @@ qemu-system-x86_64 \
     -netdev socket,id=netshare,listen=127.0.0.1:3333 \
     -device virtio-net,netdev=netshare \
     -device virtio-rng-pci \
-    -m 2G -smp 4 \
+    -m 2G -smp 2 \
     -name "testvm-1" \
     -boot d -vnc 127.0.0.1:1 \
     -monitor tcp:127.0.0.1:6001,server,nowait \
@@ -33,6 +33,7 @@ qemu-system-x86_64 \
     # -netdev socket,id=netshare,connect=127.0.0.1:3333 \
     # -monitor unix:/tmp/monitor.sock,server,nowait \
     # nc -U /tmp/monitor.sock
+    # -serial telnet:localhost:4321,server,nowait
 
 # VNC: 127.0.0.1:5901
 # In VNC
