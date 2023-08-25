@@ -7,7 +7,7 @@
 " vam install youcompleteme
 
 set background=dark
-colorscheme rosepine
+colorscheme elflord
 syntax on
 set nocompatible
 filetype off
@@ -93,9 +93,9 @@ map <C-l> <C-W>l
 
 " works like harpoon
 let g:jumpfilelist = []
-let g:vimCheetSheetLocation = "path/to/file"
-let g:vimJumpCacheLocation = "path/to/cachefile"
-call add(g:jumpfilelist, g:vimCheetSheetLocation)
+" let g:vimCheetSheetLocation = "/home/user/.vimrc"
+let g:vimJumpCacheLocation = "/home/user/.vim_jump_cache"
+" call add(g:jumpfilelist, g:vimCheetSheetLocation)
 
 func! g:LoadJumpFileCache()
     let jumpfileCacheStr = readfile(g:vimJumpCacheLocation)
