@@ -28,13 +28,13 @@ qemu-system-x86_64 \
 
 # login as root
 # ssh-keygen -A
-# vim /etc/ssh/sshd_config
-# search for Passsword, change to yes
+# sed -i 's/PasswordAuthentication no/PasswordAuthentication yes/g' /etc/ssh/sshd_config
 # systemctl restart ssh
-# useradd -m -s /usr/bin/bash xxx
-# passwd xxx
+# useradd -m -s /usr/bin/bash user
+# passwd user
+# passwd root
 
-# ssh -R 9050 -p 2222 xxx@127.0.0.1
+# ssh -R 9050 -p 2222 user@127.0.0.1
 # su
 # growpart /dev/vda 1
 # resize2fs /dev/vda1
