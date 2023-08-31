@@ -45,8 +45,10 @@ set mouse=c
 let python_highlight_all = 1
 set ruler
 
-au BufReadPost *.yml.j2 set syntax=yaml
-au BufReadPost *.yaml.j2 set syntax=yaml
+au BufReadPost *.yml.j2             set syntax=yaml
+au BufReadPost *.yaml.j2            set syntax=yaml
+au BufReadPost */playbooks/*.yml    set filetype=ansible.yaml
+au BufReadPost */roles/*.yml        set filetype=ansible.yaml
 
 set grepprg=rg\ --vimgrep\ --no-heading\ --smart-case
 
@@ -268,6 +270,9 @@ filetype plugin indent on
 " Add some plugins
 packadd! CtrlP
 packadd! ale
+" let g:ale_fixers = {
+"     \   'python': ['remove_trailing_lines'],
+" \}
 
 " Seems not necessary
 " let g:ycm_global_ycm_extra_conf = "~/.vim/.ycm_extra_conf.py"
