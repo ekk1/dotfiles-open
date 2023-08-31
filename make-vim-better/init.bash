@@ -16,3 +16,6 @@ vim .vim/syntax/markdown.vim
 # CheetSheetLocation can be deleted
 #
 # use Space+m to save a file to avoid error
+
+echo "[MESSAGES CONTROL]" > ~/.pylintrc
+echo "disable=C0103" >> ~/.pylintrc
