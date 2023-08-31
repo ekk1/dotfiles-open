@@ -38,6 +38,9 @@ apt install vim-nox vim-airline vim-airline-themes
 apt install vim-ctrlp vim-youcompleteme vim-addon-manager
 apt install vim-ale
 apt install python3-flask python3-rich python3-cryptography
+apt install pylint shellcheck
+apt install pylint3 # Deprecated in debian 12
+apt install ansible-lint # imply yamllint in debian 12, will install a lot
 
 echo "alias terminalProxyStart='export https_proxy=http://127.0.0.1:8118; export all_proxy=http://127.0.0.1:8118'" >> /home/user/.bashrc
 git clone https://github.com/ekk1/dotfiles-open.git
