@@ -1,5 +1,6 @@
 qemu-system-x86_64 \
     -m 2G -smp 2 \
+    -rtc \
     -drive file=testvm-1.qcow2,if=virtio \
     -netdev user,id=netout,hostname=testvm-1,restrict=on,hostfwd=tcp:127.0.0.1:2222-:22 \
     -device virtio-net,netdev=netout \
