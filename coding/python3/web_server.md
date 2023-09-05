@@ -24,6 +24,17 @@ serve(app, host='127.0.0.1', port=8080)
 
 ## 02. Use flask to create a minial web app
 
+```python
+from flask import Flask
+app = Flask(__name__)
+
+@app.route('/')
+def hello_world():
+    return 'Hello, World!'
+
+if __name__ == "__main__":
+    app.run("127.0.0.1", 9099)
+```
 ## 03. Use aiohttp to create a web web
 
 * This did present a better performance
