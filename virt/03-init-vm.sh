@@ -9,4 +9,4 @@ passwd user
 passwd root
 echo "export PATH=\$PATH:/sbin:/usr/sbin" >> /root/.bashrc
 exit
-scp -P 2222 04-init-env.sh 05-extras.sh 06-user-extras.sh user@127.0.0.1:
+scp -P 2222 04-init-env.sh 05-extras.sh 06-user-extras.sh 07-vnc-extra.sh user@127.0.0.1:
