@@ -2,8 +2,14 @@ growpart /dev/vda 1
 resize2fs /dev/vda1
 
 echo "Acquire::https::proxy \"socks5h://127.0.0.1:9050\";" >> /etc/apt/apt.conf.d/90proxy
+echo "Acquire::http::proxy \"socks5h://127.0.0.1:9050\";" >> /etc/apt/apt.conf.d/90proxy
 sed -i 's/deb.debian.org/mirrors.ustc.edu.cn/g' /etc/apt/mirrors/debian.list
 sed -i 's/deb.debian.org/mirrors.ustc.edu.cn/g' /etc/apt/mirrors/debian-security.list
+# if using self hosted apt
+#sed -i 's/deb.debian.org/192.168.x.x/g' /etc/apt/mirrors/debian.list
+#sed -i 's/deb.debian.org/192.168.x.x/g' /etc/apt/mirrors/debian-security.list
+#sed -i 's/https/http/g' /etc/apt/mirrors/debian.list
+#sed -i 's/https/http/g' /etc/apt/mirrors/debian-security.list
 sed -i 's/main/main contrib/'   /etc/apt/sources.list.d/debian.sources
 sed -i 's/deb deb-src/deb/'     /etc/apt/sources.list.d/debian.sources
 apt update
