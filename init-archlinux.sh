@@ -34,12 +34,14 @@ pacman -S \
 # KVM
 pacman -S \
     qemu-full libvirt virt-manager \
-    dnsmasq dmidecode ovmf remmina
+    dnsmasq dmidecode ovmf remmina freerdp libvncserver
 
 # GUI Extra
 pacman -S libreoffice-fresh gimp lollypop gthumb grim
 pacman -S code yt-dlp
 pacman -S fcitx5-im fcitx5-chinese-addons
+# Run fcitx5-configtool, add pinyin
+# When needed, run fcitx5
 
 # gammastep -O 4500K
 # showmount -e 192.168.xxx
