@@ -3,7 +3,9 @@ pacman -S \
     vim tmux tree git htop man-db \
     nfs-utils smartmontools ranger \
     chrony dhcpcd dolphin ntfs-3g lsof \
-    tig ncdu rsync btrfs-progs unrar p7zip
+    tig ncdu rsync btrfs-progs unrar p7zip python
+
+pacman -S powerline powerline-fonts
 
 # GUI
 pacman -S \
@@ -12,7 +14,7 @@ pacman -S \
     polkit pipewire-pulse pavucontrol \
     i3blocks i3status intel-gpu-tools \
     intel-media-driver mpv libva-utils \
-    chromium firefox
+    chromium firefox hyprland
 
 # Fonts
 pacman -S \
