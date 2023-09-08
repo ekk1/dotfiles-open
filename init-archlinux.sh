@@ -3,7 +3,7 @@ pacman -S \
     vim tmux tree git htop man-db \
     nfs-utils smartmontools ranger \
     chrony dhcpcd dolphin ntfs-3g lsof \
-    tig ncdu rsync btrfs-progs unrar p7zip python
+    tig ncdu rsync btrfs-progs unrar p7zip python openbsd-netcat
 
 pacman -S powerline powerline-fonts
 
