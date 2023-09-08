@@ -37,8 +37,9 @@ pacman -S \
     dnsmasq dmidecode ovmf remmina
 
 # GUI Extra
-pacman -S libreoffice-fresh gimp lollypop
-pacman -S fcitx fcitx-libpinyin
+pacman -S libreoffice-fresh gimp lollypop gthumb grim
+pacman -S code yt-dlp
+pacman -S fcitx5-im fcitx5-chinese-addons
 
 # gammastep -O 4500K
 # showmount -e 192.168.xxx
