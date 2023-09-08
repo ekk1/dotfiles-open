@@ -23,7 +23,8 @@ pacman -S \
     adobe-source-han-sans-cn-fonts \
     adobe-source-han-serif-cn-fonts \
     ttf-ubuntu-mono-nerd \
-    noto-fonts-cjk
+    noto-fonts-cjk \
+    noto-fonts-emoji
 
 # Laptop may needs
 pacman -S \
@@ -46,3 +47,4 @@ pacman -S fcitx5-im fcitx5-chinese-addons
 # gammastep -O 4500K
 # showmount -e 192.168.xxx
 # mount -t nfs xxxx:/daa12312312 /data01
+# grim
