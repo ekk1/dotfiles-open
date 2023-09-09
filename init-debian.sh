@@ -8,6 +8,8 @@ apt install sway swaybg swayidle swaylock sway-backgrounds foot foot-themes dmen
 apt install fonts-noto-cjk fonts-noto-mono fonts-noto-color-emoji fonts-noto-cjk-extra fonts-font-awesome fonts-powerline fonts-ubuntu-console
 apt install ncdu htop tmux netcat-openbsd wget curl iptables tig
 apt install gimp
+apt install gnome-shell-extension-freon mpv lm-sensors rfkill
+apt install -t bookworm-backports yt-dlp
 
 # Kernel building
 apt install pahole build-essential binutils-dev libncurses5-dev libssl-dev ccache bison flex libelf-dev bc debhelper rsync
