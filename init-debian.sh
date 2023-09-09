@@ -25,7 +25,7 @@ dpkg -i linux-headers-[VERSION].deb linux-image-[VERSION].deb linux-libc-dev-[VE
 dpkg -L wireless-regdb
 
 # Quick firewall
-cat << EOF > /home/xxxx/00-startup.sh
+cat << EOF > /root/00-startup.sh
 iptables -F
 iptables -X
 iptables -P INPUT DROP
@@ -42,7 +42,7 @@ Description=Turn on firewall
 
 [Service]
 Type=oneshot
-ExecStart=bash /home/xxxx/00-startup.sh
+ExecStart=bash /root/00-startup.sh
 
 [Install]
 WantedBy=multi-user.target
