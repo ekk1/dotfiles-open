@@ -95,6 +95,6 @@ export MOZ_ENABLE_WAYLAND=1
 # POWERLINE_BASH_SELECT=1
 # . /usr/share/powerline/bindings/bash/powerline.sh
 
-# GTK_IM_MODULE=fcitx
-# QT_IM_MODULE=fcitx
-# XMODIFIERS=@im=fcitx
+export GTK_IM_MODULE=fcitx
+export QT_IM_MODULE=fcitx
+export XMODIFIERS=@im=fcitx
