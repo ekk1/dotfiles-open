@@ -104,4 +104,10 @@ for DIRR in RESOURCE_PACK:
     with open(f"downloader/download-{DIRR.replace('/', '-')}.sh", 'w+') as f:
         for file in RESOURCE_PACK[DIRR]:
             f.write(f'mkdir -p "..{DIRR}"\n')
-            f.write(f'while true; do curl --limit-rate 4M --speed-limit 5000 --speed-time 30 -JL -C - -x socks5h://127.0.0.1:10099 --netrc-file ../netrc "{RESOURCE_PACK[DIRR][file]}" -o "..{DIRR}/{file}" ; if [ $? != 18 ] && [ $? != 28 ]; then sleep 5; break; fi ; done\n')
+            download_cmd = "while true; do curl --limit-rate 4M --speed-limit 5000 "
+            download_cmd += "--speed-time 30 -JL -C - -x socks5h://127.0.0.1:10099 "
+            download_cmd += f'--netrc-file ../netrc "{RESOURCE_PACK[DIRR][file]}" '
+            download_cmd += f'-o "..{DIRR}/{file}" ; '
+            download_cmd += "if [ $? != 18 ] && [ $? != 28 ]; then sleep 5; "
+            download_cmd += "break; fi ; done\n"
+            f.write(download_cmd)
