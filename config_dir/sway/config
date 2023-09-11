@@ -10,16 +10,26 @@ set $menu dmenu_path | dmenu | xargs swaymsg exec --
 # swaymsg -t get_inputs
 # swaymsg -t get_tree
 
-output * bg /usr/share/backgrounds/sway/Sway_Wallpaper_Blue_1920x1080.png fill scale 2
-# output eDP-1 bg /usr/share/backgrounds/sway/Sway_Wallpaper_Blue_1920x1080.png fill scale 2
-# output * bg /usr/share/backgrounds/sway/Sway_Wallpaper_Blue_1920x1080.png fill mode 111x222@60Hz
+output * {
+    bg /usr/share/backgrounds/sway/Sway_Wallpaper_Blue_1920x1080.png fill
+    # scale 2
+    # position 0 0  # Note: position is divided by scale
+    # mode 111x222@60
+}
+
+# If multi-head, select one
+# focus output DP-2
+
+# Assign workspace to monitor
+# workspace 1 output DP-2
+# workspace 2 output DP-1
 
 exec swayidle -w \
-        timeout 300 'swaylock -f -c 00ffff' \
+        timeout 300 'swaylock -f -c 00ffff -e -i /usr/share/backgrounds/gnome/adwaita-d.webp' \
         timeout 360 'swaymsg "output * power off"' \
         timeout 60 'if pgrep -x swaylock; then swaymsg "output * power off"; fi' \
         resume 'swaymsg "output * power on"' \
-        before-sleep 'swaylock -f -c 00ffff'
+        before-sleep 'swaylock -f -c 00ffff -e -i /usr/share/backgrounds/gnome/adwaita-d.webp'
 input "type:keyboard" {
     xkb_options ctrl:nocaps
 }
@@ -30,6 +40,9 @@ input "type:touchpad" {
     tap_button_map lrm
     dwt enabled
 }
+# Screenshot
+# Run grimshot check first
+bindsym $mod+p  exec grimshot save area
 bindsym $mod+Return exec $term
 bindsym $mod+Shift+q kill
 bindsym $mod+d exec $menu

@@ -3,6 +3,7 @@ apt install vim vim-nox vim-youcompleteme vim-ctrlp vim-airline vim-airline-them
 
 # Sway
 apt install sway swaybg swayidle swaylock sway-backgrounds foot foot-themes dmenu wofi i3status i3blocks
+apt install grimshot gthumb
 
 # Fonts
 apt install fonts-noto-cjk fonts-noto-mono fonts-noto-color-emoji fonts-noto-cjk-extra fonts-font-awesome fonts-powerline fonts-ubuntu-console
