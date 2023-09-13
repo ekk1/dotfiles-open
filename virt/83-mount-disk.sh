@@ -1,3 +1,4 @@
+#!/bin/bash
 modprobe nbd max_part=8
 qemu-nbd --connect=/dev/nbd0 $1
 fdisk /dev/nbd0 -l

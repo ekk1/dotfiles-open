@@ -1,3 +1,4 @@
+#!/bin/bash
 qemu-system-x86_64 \
     -m 2G -smp 2 \
     -drive file=testvm-1.qcow2,if=virtio \

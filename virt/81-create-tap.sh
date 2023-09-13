@@ -1,3 +1,4 @@
+#!/bin/bash
 ip link add br0 type bridge
 ip tuntap add dev tap0 mode tap
 ip link set dev tap0 master br0

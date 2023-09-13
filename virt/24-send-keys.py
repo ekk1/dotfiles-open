@@ -1,3 +1,4 @@
+#!/usr/bin/python
 import socket
 import time
 import string
@@ -37,18 +38,23 @@ cmds = [
     "ssh-keygen -A",
     "sleep 10",
     "sed -i 's/PasswordAuthentication no/PasswordAuthentication yes/g' /etc/ssh/sshd_config",
+    "sleep 2"
     "systemctl restart ssh",
+    "sleep 2"
     "useradd -m -s /usr/bin/bash sa",
+    "sleep 2"
     "passwd sa",
+    "sleep 2"
     "123",
+    "sleep 2"
     "123",
-    "growpart /dev/vda 1",
-    "sleep 5",
-    "resize2fs /dev/vda1",
-    "sleep 5",
-    "echo \"Acquire::https::proxy \\\"socks5h://127.0.0.1:2222\\\";\" >> /etc/apt/apt.conf.d/90proxy",
-    "sed -i 's/deb.debian.org/mirrors.ustc.edu.cn/g' /etc/apt/mirrors/debian.list",
-    "sed -i 's/deb.debian.org/mirrors.ustc.edu.cn/g' /etc/apt/mirrors/debian-security.list",
+    "sleep 2"
+    "passwd root",
+    "sleep 2"
+    "321",
+    "sleep 2"
+    "321",
+    "sleep 2"
     "echo 'export PATH=$PATH:/sbin:/usr/sbin' >> /root/.bashrc",
 ]
 

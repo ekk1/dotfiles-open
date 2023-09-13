@@ -1,3 +1,4 @@
+#!/bin/bash
 qemu-system-x86_64 \
     -enable-kvm \
     -m 8G -smp 8 \
