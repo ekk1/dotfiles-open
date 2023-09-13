@@ -1,55 +1,62 @@
 #!/bin/bash
 
 ram_virt_dir="/dev/shm/virt"
-disk_name="testvm-1.qcow2"
-raw_name="testvm-1.img"
-
-iso_name="${1}"
+disk_name="testvm-1.img"
 
 echo "Creating vm"
-echo "Choose kvm or not"
 
+qemu_iso_flag=""
 qemu_kvm=""
+qemu_nic_type=""
+qemu_disk_if=""
+qemu_virtio_rng=""
 qemu_target_disk=""
 qemu_size=""
-qemu_iso_flag=""
-qemu_nic_type=""
-qemu_virtio_rng=""
-qemu_disk_if=""
+qemu_machine=""
 
+query_iso=$(ls *.iso)
+if [[ $? == 0 ]]; then
+    select iii in no $query_iso
+    do
+        if [[ $iii == "no" ]]; then
+            echo "Skipping ISO"
+            break
+        fi
+        if [[ ! -z $iii ]]; then
+            echo "Using ISO: $iii"
+            qemu_iso_flag="-drive file=${iii},if=scsi,media=cdrom"
+            break
+        fi
+    done
+fi
 
+echo "Choose kvm or not"
 select ch in kvm pure-qemu
 do
     case $ch in
         kvm)
             qemu_kvm="-enable-kvm"
-            break
             ;;
         pure-qemu)
-            break
             ;;
     esac
+    break
 done
 echo "Starting qemu with ${qemu_kvm}"
 
 echo "Select OS type"
-select ch in windows linux
+select ch in linux windows
 do
     case $ch in
         windows)
             qemu_nic_type="e1000"
-            if [[ ! -z iso_name ]]; then
-                qemu_iso_flag="-drive file=${iso_name},if=scsi,media=cdrom"
-            fi
             qemu_disk_if="scsi"
+            qemu_machine="-machine pc-q35-8.1"
             break
             ;;
         linux)
             qemu_nic_type="virtio-net"
             qemu_virtio_rng="-device virtio-rng-pci"
-            if [[ ! -z iso_name ]]; then
-                qemu_iso_flag="-drive file=${iso_name},if=scsi,media=cdrom"
-            fi
             qemu_disk_if="virtio"
             break
             ;;
@@ -57,23 +64,15 @@ do
 done
 echo "Starting qemu with nic ${qemu_nic_type}"
 
-select ch in base raw base-ram raw-ram
+select ch in file ram
 do
     case $ch in
-        base)
+        file)
             qemu_target_disk=${disk_name}
             break
             ;;
-        raw)
-            qemu_target_disk=${raw_name}
-            break
-            ;;
-        base-ram)
+        ram)
             qemu_target_disk="${ram_virt_dir}/${disk_name}"
-            break
-            ;;
-        raw-ram)
-            qemu_target_disk="${ram_virt_dir}/${raw_name}"
             break
             ;;
     esac
@@ -103,22 +102,23 @@ do
 done
 echo "Starting with ${qemu_size}"
 
-#qemu-system-x86_64 \
-#    ${qemu_kvm} \
-#    ${qemu_size} \
-#    ${qemu_iso_flag} \
-#    -drive file=${qemu_target_disk},if=${qemu_disk_if} \
-#    -netdev user,id=netout,hostname=testvm-1,restrict=on,hostfwd=tcp:127.0.0.1:2222-:22 \
-#    -device ${qemu_nic_type},netdev=netout \
-#    -netdev socket,id=netshare,listen=127.0.0.1:3333 \
-#    -device ${qemu_nic_type},netdev=netshare \
-#    ${qemu_virtio_rng} \
-#    -name "testvm-1" \
-#    -boot d -vnc 127.0.0.1:10 \
-#    -monitor tcp:127.0.0.1:6001,server,nowait \
-#    -serial tcp:127.0.0.1:5001,server,nowait \
-#    -daemonize \
-#    -display none
+qemu-system-x86_64 \
+    ${qemu_kvm} \
+    ${qemu_size} \
+    ${qemu_iso_flag} \
+    ${qemu_machine} \
+    -drive file=${qemu_target_disk},if=${qemu_disk_if} \
+    -netdev user,id=netout,hostname=testvm-1,restrict=on,hostfwd=tcp:127.0.0.1:2222-:22 \
+    -device ${qemu_nic_type},netdev=netout \
+    -netdev socket,id=netshare,listen=127.0.0.1:3333 \
+    -device ${qemu_nic_type},netdev=netshare \
+    ${qemu_virtio_rng} \
+    -name "testvm-1" \
+    -boot d -vnc 127.0.0.1:10 \
+    -monitor tcp:127.0.0.1:6001,server,nowait \
+    -serial tcp:127.0.0.1:5001,server,nowait \
+    -daemonize \
+    -display none
     # -rtc \
 
 # Extra options
