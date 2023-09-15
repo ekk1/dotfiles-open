@@ -1,16 +1,18 @@
 # Vim related
-apt install vim vim-nox vim-youcompleteme vim-ctrlp vim-airline vim-airline-themes vim-addon-manager vim-ale vim-python-jedi
+apt install vim-nox vim-youcompleteme vim-ctrlp vim-airline vim-airline-themes vim-addon-manager vim-ale
+# Fonts
+apt install fonts-noto-cjk fonts-noto-mono fonts-noto-color-emoji fonts-noto-cjk-extra fonts-font-awesome fonts-powerline fonts-ubuntu-console
+apt install ncdu htop tmux netcat-openbsd wget curl iptables tig powerline
+apt install gimp
+apt install -t bookworm-backports yt-dlp
+apt install mpv lm-sensors rfkill
+apt install gnome-shell-extension-freon
 
 # Sway
 apt install sway swaybg swayidle swaylock sway-backgrounds foot foot-themes dmenu wofi i3status i3blocks
 apt install grimshot gthumb
 
 # Fonts
-apt install fonts-noto-cjk fonts-noto-mono fonts-noto-color-emoji fonts-noto-cjk-extra fonts-font-awesome fonts-powerline fonts-ubuntu-console
-apt install ncdu htop tmux netcat-openbsd wget curl iptables tig
-apt install gimp
-apt install gnome-shell-extension-freon mpv lm-sensors rfkill
-apt install -t bookworm-backports yt-dlp
 
 # Kernel building
 apt install pahole build-essential binutils-dev libncurses5-dev libssl-dev ccache bison flex libelf-dev bc debhelper rsync
