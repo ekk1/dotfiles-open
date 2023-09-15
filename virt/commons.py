@@ -1,4 +1,5 @@
-import subprocess
+"""common"""
+import os
 
 flavor_list = {
     "1c1g":     "-m 1G -smp 1",
@@ -11,6 +12,7 @@ def create_vm_disk(
         name="testvm-1.disk",
         raw_disk=False
     ):
+    """command for generate vm disk"""
     cmd = "qemu-img create "
     if raw_disk:
         cmd += "-f raw "
@@ -22,21 +24,42 @@ def create_vm_disk(
         os.mkdir("/dev/shm/virt", mode=0o700)
         cmd += "/dev/shm/virt/"
     cmd += name
-    print(cmd)
     return cmd
 
 def select_item(input_list):
-    pass
+    """common select menu"""
+    _index = 0
+    _mapping = {}
+    for item in input_list:
+        _mapping[_index] = item
+        print(f"[{_index}] {item}")
+    while True:
+        a = input("Select: ")
+        try:
+            aa = int(a)
+        except ValueError:
+            print("Failed to decode")
+            continue
+        if aa not in _mapping:
+            print("Failed to select")
+            continue
+        return _mapping[aa]
 
 def list_file(path, keyword):
-    pass
+    """list files by keyword"""
+    filtered_list = []
+    files = os.listdir(path)
+    for _f in files:
+        if keyword in _f:
+            filtered_list.append(_f)
+    return filtered_list
 
 def create_vm(
-        os="linux",
-        name="testvm",
-        flavor="1c1g",
-        disk="testvm-1.disk",
-        cdrom="",
-        kvm=False,
+        _guest_os="linux",
+        _guest_name="testvm",
+        _guest_flavor="1c1g",
+        _guest_disk="testvm-1.disk",
+        _guest_cdrom="",
+        _guest_use_kvm=False,
     ):
-    pass
+    """command for create a vm"""
