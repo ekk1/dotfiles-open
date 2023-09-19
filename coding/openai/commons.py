@@ -23,18 +23,19 @@ def list_models():
 def talk_with_gpt4(prompt="", msg=""):
     """simple talk"""
     header = {"Authorization": f"Bearer {OPENAI_API_KEY}"}
+    message_list = []
+    if prompt != "":
+        message_list.append({"role": "system", "content": prompt})
+    message_list.append({"role": "user", "content": msg})
     req_body = {
         "model": "gpt-4-0613",
-        "messages": [
-            {"role": "system", "content": prompt},
-            {"role": "user", "content": msg},
-        ]
+        "messages": message_list,
     }
     r = requests.post(
             f"{OPENAI_API_ENDPOINT}/v1/chat/completions",
             headers=header,
             json=req_body,
-            timeout=30
+            timeout=120
     )
     aa = json.loads(r.text)
     ret = f"{aa['model']}:\n"
