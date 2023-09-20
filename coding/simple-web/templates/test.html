@@ -6,31 +6,64 @@
     <title>Document</title>
     <style>
     h1 {
-        color: aqua;
+        color: DarkMagenta;
+    }
+	table, th, td {
+		border: 1px solid black;
+	}
+    input {
+        margin: 5px;
+    }
+	th, td {
+		padding: 5px;
+	}
+    div {
+        margin: 10px;
+        margin-top: 20px;
     }
     </style>
 </head>
 <body>
-    <h1>test</h1>
-    <p>a page that should work in elinks</p>
     <div>
-        <form action="/file" method="post" enctype="multipart/form-data">
-            <label for="username">username:</label><br>
-            <input type="text" id="username" name="name_username"><br>
-            <label for="password">password:</label><br>
-            <input type="password" id="password" name="name_password"><br>
-            <input type="submit" id="submit" name="name_submit"><br>
-        </form>
-        <a href="test.html2">html2</a>
+        <h1>Demo Manager</h1>
+        <p>a simple manager</p>
+        <button><a href="/">Refresh</a></button>
+    </div>
+	<div>
         <table>
             <tr>
-                <th>aa</th>
+                <th>name</th>
+                <th>status</th>
             </tr>
+{% for item in data %}
             <tr>
-                <td>bb</td>
-                <td>bb</td>
+                <td>{{ item }}</td>
+                <td>{{ data[item]['status'] }}</td>
             </tr>
+{% endfor %}
         </table>
+	</div>
+    <div>
+        <form action="/" method="post" enctype="multipart/form-data">
+            <fieldset>
+                <legend>Actions</legend>
+
+                <label for="name">name:</label>
+                <input type="text" id="name" name="name_list" value="111,222"><br>
+
+                <input type="radio" id="start" name="action" value="start">
+                <label for="start">start</label><br>
+                <input type="radio" id="stop" name="action" value="stop">
+                <label for="stop">stop</label><br>
+                <input type="radio" id="update" name="action" value="update">
+                <label for="update">update</label><br>
+
+                <input type="submit" id="submit"><br>
+            </fieldset>
+        </form>
+    </div>
+    <div>
+        <p>{{ msg }}</p>
     </div>
 </body>
 </html>
