@@ -50,7 +50,7 @@
         </table>
 	</div>
     <div>
-        <form action="/" method="post" enctype="application/x-www-form-urlencoded">
+        <form action="/" method="post" enctype="multipart/form-data">
             <fieldset>
                 <legend>Actions</legend>
 
@@ -63,6 +63,8 @@
                 <label for="stop">stop</label><br>
                 <input type="radio" id="update" name="action" value="update">
                 <label for="update">update</label><br>
+
+                <input type="file" name="testfile">
 
                 <input type="submit" id="submit"><br>
             </fieldset>

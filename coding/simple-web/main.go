@@ -2,10 +2,14 @@ package main
 
 import (
 	_ "embed"
+	"errors"
 	"flag"
+	"go_utils/minikv"
 	"go_utils/utils"
 	"html/template"
+	"io"
 	"net/http"
+	"os"
 	"sync"
 )
 
@@ -13,6 +17,8 @@ import (
 var indexHTML string
 
 var indexTemplate = template.Must(template.New("index").Parse(indexHTML))
+
+var kv *minikv.KV
 
 type PageData struct {
 	Title  string
@@ -37,16 +43,24 @@ func handleRoot(w http.ResponseWriter, req *http.Request) {
 
 	// Parse form when POST
 	if req.Method == http.MethodPost {
-		if err := req.ParseForm(); err != nil {
-			utils.LogPrintError("Failed to parse form: ", err)
-			utils.ServerError("Failed", w, req)
-			return
+		postData := req.FormValue("name_list")
+		if postData == "" {
+			utils.LogPrintWarning("No postData")
+		} else {
+			utils.LogPrintInfo("POST DATA:", postData)
 		}
-		utils.LogPrintInfo("form data: ", req.PostForm)
-		// utils.LogPrintInfo(req.FormValue("name_list"))
+		f, fHeader, err := req.FormFile("testfile")
+		if err != nil {
+			utils.LogPrintWarning("No file")
+			utils.LogPrintWarning(err)
+		} else {
+			utils.LogPrintInfo(fHeader)
+			defer f.Close()
+			data, _ := io.ReadAll(f)
+			os.WriteFile("tetset", data, 0666)
+		}
 	}
 
-	// if err := indexTemplate.ExecuteTemplate(w, "index", &PageData{Title: "test", Info: "testinfo"}); err != nil {
 	pageData := &PageData{
 		Title:  "test",
 		Msg:    "msg",
@@ -67,6 +81,28 @@ func handleRoot(w http.ResponseWriter, req *http.Request) {
 func main() {
 	var verboseFlag = flag.Int("v", 0, "debug (max 4)")
 	flag.Parse()
+
+	kvv, err := minikv.NewKV("ss", 0)
+	if err != nil {
+		utils.LogPrintError(err)
+		os.Exit(1)
+	}
+	kv = kvv
+
+	if err := kv.Load(); err != nil {
+		if errors.Is(err, os.ErrNotExist) {
+			utils.LogPrintWarning("DB not exist, creating...")
+			if err2 := kv.Save(); err2 != nil {
+				utils.LogPrintError(err2)
+				os.Exit(2)
+			}
+		} else {
+			utils.LogPrintError(err)
+			utils.LogPrintError("Failed to load DB, exiting")
+			os.Exit(2)
+		}
+	}
+
 	switch *verboseFlag {
 	case 0:
 		utils.SetLogLevelInfo()
