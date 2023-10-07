@@ -11,7 +11,7 @@ apt install fonts-noto-cjk fonts-noto-mono \
 # Terminal tools
 apt install ncdu htop tmux netcat-openbsd \
     wget curl iptables tig powerline ranger \
-    rsync cryptsetup \
+    rsync cryptsetup ripgrep \
     ansible command-not-found
 
 # GUI Tools
