@@ -12,7 +12,7 @@ apt install fonts-noto-cjk fonts-noto-mono \
 apt install ncdu htop tmux netcat-openbsd \
     wget curl iptables tig powerline ranger \
     rsync cryptsetup ripgrep \
-    ansible command-not-found
+    ansible command-not-found elinks w3m
 
 # GUI Tools
 apt install gimp
@@ -23,6 +23,7 @@ apt install chromium neofetch virt-manager remmina fcitx5 fcitx5-chinese-addons
 # apt install firmware-linux
 apt install mesa-utils inxi
 apt install fcitx5 fcitx5-chinese-addons libsecret-tools
+apt install foot foot-themes
 
 # Sway
 # apt install sway swaybg swayidle swaylock sway-backgrounds foot foot-themes dmenu wofi i3status i3blocks
