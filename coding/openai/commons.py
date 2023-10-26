@@ -66,7 +66,7 @@ def decode_io(data):
             ret.append({"role": "assistant", "content": cc})
     return prompt, ret
 
-def talk_with_gpt4_streamed(k, prompt, msg):
+def talk_with_gpt4_streamed(k, prompt, msg, model):
     if len(msg) == 0:
         raise RuntimeError("Message cannot be empty array")
     if msg[-1]['role'] != "user":
@@ -81,7 +81,8 @@ def talk_with_gpt4_streamed(k, prompt, msg):
         message_list.append(mm)
     print(message_list)
     req_body = {
-        "model": "gpt-4-0613",
+        "model": model,
+        # "model": "gpt-3.5-turbo-16k-0613",
         "messages": message_list,
         "stream": True,
     }
