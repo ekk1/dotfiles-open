@@ -73,17 +73,21 @@ def talk_with_gpt4_streamed(prompt="", msg=""):
             timeout=600,
             stream=True,
     )
+    all_ret = ""
     for line in r.iter_lines():
         if len(line) > 1 and "data" in line.decode():
             try:
                 data = json.loads(line.decode()[5:])
                 if 'content' in data['choices'][0]['delta']:
-                    print(data['choices'][0]['delta']['content'], end="", flush=True)
+                    cc = data['choices'][0]['delta']['content']
+                    print(cc, end="", flush=True)
+                    all_ret += cc
                 else:
                     print()
                     print(line)
             except Exception as e:
                 print(line)
+    return all_ret
 
 if __name__ == "__main__":
     list_models()

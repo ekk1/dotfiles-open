@@ -15,4 +15,6 @@ else:
     print("Using input")
     data = ii
 
-commons.talk_with_gpt4_streamed("", data)
+reply = commons.talk_with_gpt4_streamed("", data)
+with open("answer", 'w') as f:
+    f.write(reply)
