@@ -15,4 +15,4 @@ else:
     print("Using input")
     data = ii
 
-commons.talk_with_gpt4("", data)
+commons.talk_with_gpt4_streamed("", data)

@@ -2,3 +2,7 @@
 *.img
 *.iso
 *.swp
+coding/openai/load-key.sh2
+coding/openai/message
+coding/openai/reply
+
