@@ -3,7 +3,5 @@
 *.iso
 *.swp
 *.pyc
-coding/openai/load-key.sh2
-coding/openai/message*
-coding/openai/reply
+coding/openai/*.txt
 

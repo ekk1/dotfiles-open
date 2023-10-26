@@ -1,66 +1,85 @@
 """common functions"""
 import os
-import getpass
 import json
-import pprint
 import requests
 
-OPENAI_API_ENDPOINT="https://api.chatanywhere.com.cn"
+# OPENAI_API_ENDPOINT="https://api.chatanywhere.com.cn"
+OPENAI_API_ENDPOINT="https://api.chatanywhere.cn"
 
-if 'OPENAI_API_KEY' in os.environ:
-    OPENAI_API_KEY = os.environ['OPENAI_API_KEY']
-else:
-    OPENAI_API_KEY = getpass.getpass("Enter API Key: ")
+SEPRATOR = "<<>>++__--!!@@##--<<>>\n"
 
-def list_models():
+def load_keys():
+    if 'OPENAI_API_KEY' in os.environ:
+        return os.environ['OPENAI_API_KEY']
+    with open("key.txt", 'r', encoding='utf8') as f:
+        data = f.read()
+        while True:
+            if data[-1] == "\n":
+                data = data[:-1]
+            else:
+                break
+    return data
+
+def list_models(k):
     """list all models"""
-    header = {"Authorization": f"Bearer {OPENAI_API_KEY}"}
+    header = {"Authorization": f"Bearer {k}"}
     r = requests.get(f"{OPENAI_API_ENDPOINT}/v1/models", headers=header, timeout=10)
-    aa = json.loads(r.text)
-    for model in aa['data']:
-        print(model['id'])
-
-def talk_with_gpt4(prompt="", msg=""):
-    """simple talk"""
-    header = {"Authorization": f"Bearer {OPENAI_API_KEY}"}
-    message_list = []
-    if prompt != "":
-        message_list.append({"role": "system", "content": prompt})
-    message_list.append({"role": "user", "content": msg})
-    req_body = {
-        "model": "gpt-4-0613",
-        "messages": message_list,
-    }
-    r = requests.post(
-            f"{OPENAI_API_ENDPOINT}/v1/chat/completions",
-            headers=header,
-            json=req_body,
-            timeout=600,
-            stream=True,
-    )
-    all_data = b""
-    for line in r.iter_content(1024):
-        print("Got: ", len(line))
-        all_data += line
     try:
-        aa = json.loads(all_data)
-        ret = f"{aa['model']}:\n"
-        ret += f" -> {msg}\n"
-        ret += f" <- {aa['choices'][0]['message']['content']}\n"
-        ret += f" -- {aa['choices'][0]['finish_reason']}\n"
-        ret += f"Usage: {aa['usage']['prompt_tokens']} + "
-        ret += f"{aa['usage']['completion_tokens']} = "
-        ret += f"{aa['usage']['total_tokens']}\n"
-        print(ret)
-    except Exception as e:
+        aa = json.loads(r.text)
+        for model in aa['data']:
+            print(model['id'])
+    except:
         print(r.text)
 
-def talk_with_gpt4_streamed(prompt="", msg=""):
-    header = {"Authorization": f"Bearer {OPENAI_API_KEY}"}
+def decode_io(data):
+    data_parts = data.split(SEPRATOR)
+    prompt_part = data_parts[0]
+    prompt = prompt_part.split("PROMPT: ")[1]
+    while True:
+        if len(prompt) == 0:
+            break
+        if prompt[-1] == "\n":
+            prompt = prompt[:-1]
+        else:
+            break
+    ret = []
+    for parts in data_parts[1:]:
+        if parts.startswith("USER: "):
+            cc = parts.split("USER: ")[1]
+            while True:
+                if len(cc) == 0:
+                    break
+                if cc[-1] == "\n":
+                    cc = cc[:-1]
+                else:
+                    break
+            ret.append({"role": "user", "content": cc})
+        elif parts.startswith("ASSISTANT: "):
+            cc = parts.split("ASSISTANT: ")[1]
+            while True:
+                if len(cc) == 0:
+                    break
+                if cc[-1] == "\n":
+                    cc = cc[:-1]
+                else:
+                    break
+            ret.append({"role": "assistant", "content": cc})
+    return prompt, ret
+
+def talk_with_gpt4_streamed(k, prompt, msg):
+    if len(msg) == 0:
+        raise RuntimeError("Message cannot be empty array")
+    if msg[-1]['role'] != "user":
+        raise RuntimeError("Last messgae has to be user")
+    if msg[-1]['content'] == "":
+        raise RuntimeError("Message cannot be empty")
+    header = {"Authorization": f"Bearer {k}"}
     message_list = []
     if prompt != "":
         message_list.append({"role": "system", "content": prompt})
-    message_list.append({"role": "user", "content": msg})
+    for mm in msg:
+        message_list.append(mm)
+    print(message_list)
     req_body = {
         "model": "gpt-4-0613",
         "messages": message_list,
@@ -84,10 +103,10 @@ def talk_with_gpt4_streamed(prompt="", msg=""):
                     all_ret += cc
                 else:
                     print()
-                    print(line)
+                    print("Done")
             except Exception as e:
-                print(line)
-    return all_ret
+                print("DONE")
+    return all_ret + "\n"
 
 if __name__ == "__main__":
-    list_models()
+    list_models(load_keys())

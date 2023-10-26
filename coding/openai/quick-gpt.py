@@ -1,16 +1,15 @@
 """quick talk"""
 import sys
-import commons
 import os
+import commons
 
 ii = sys.argv[1]
 
 data = ""
 if os.path.exists(ii):
     print("Using file")
-    f = open(ii)
-    data = f.read()
-    f.close()
+    with open(ii, encoding='utf8') as f:
+        data = f.read()
 else:
     print("Using input")
     data = ii
