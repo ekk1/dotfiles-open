@@ -11,15 +11,26 @@ SEPRATOR = "<<>>++__--!!@@##--<<>>\n"
 
 print("Using: ", OPENAI_API_ENDPOINT)
 
+QUICK_PROMPT = {
+    "ff": "帮我翻译一下我发过来的内容到中文",
+}
+
 def load_keys():
     with open("key.txt", 'r', encoding='utf8') as f:
         data = f.read()
     return data.strip()
 
 def init_io_file():
+    print("快速 prompt: ")
+    for kk in QUICK_PROMPT:
+        print(kk + ":", QUICK_PROMPT[kk])
     pp = input("Prompt: ")
+    if pp in QUICK_PROMPT:
+        prom = QUICK_PROMPT[pp]
+    else:
+        prom = pp
     with open("io.txt", 'w', encoding="utf8") as f:
-        f.write(f"PROMPT: {pp}\n")
+        f.write(f"PROMPT: {prom}\n")
         f.write(SEPRATOR)
 
 def list_models(k):
@@ -60,7 +71,7 @@ def talk_with_gpt4_streamed(k, prompt, msg, model):
         message_list.append({"role": "system", "content": prompt})
     for mm in msg:
         message_list.append(mm)
-    print(message_list)
+    # print(message_list)
     req_body = {
         "model": model,
         "messages": message_list,
@@ -103,6 +114,9 @@ for ii in range(0, len(models)):
 
 while True:
     a = input("Select: ")
+    if a == "ll":
+        list_models(load_keys())
+        continue
     if a not in string.digits:
         print("No such model")
         continue
