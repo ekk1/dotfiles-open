@@ -20,6 +20,12 @@ def load_keys():
                 break
     return data
 
+def init_io_file():
+    pp = input("Prompt: ")
+    with open("io.txt", 'w', encoding="utf8") as f:
+        f.write(f"PROMPT: {pp}\n")
+        f.write(SEPRATOR)
+
 def list_models(k):
     """list all models"""
     header = {"Authorization": f"Bearer {k}"}
@@ -82,7 +88,6 @@ def talk_with_gpt4_streamed(k, prompt, msg, model):
     print(message_list)
     req_body = {
         "model": model,
-        # "model": "gpt-3.5-turbo-16k-0613",
         "messages": message_list,
         "stream": True,
     }
