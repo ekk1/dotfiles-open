@@ -100,6 +100,10 @@ systemctl enable sa-pc-startup.service
 # other libvirt tweaks
 #
 # Windows guest needs UEFI Firmware
+# Its better to start installing without GPU first
+# After done installing, add GPU and start again, wait for windows to download its own GPU driver, screen will not work for now
+# After windows installed its driver, shutdown and set Virtual GPU to None, start again, and install latest driver from Nvidia
+#
 # Socket Core Thread setting needs to be exact
 # lscpu -e
 #
