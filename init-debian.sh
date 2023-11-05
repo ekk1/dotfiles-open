@@ -73,3 +73,74 @@ systemctl enable sa-pc-startup.service
 # glxinfo
 # switcheroolctl list
 
+# PCI Passthrough
+# vim /etc/default/grub
+# GRUB_CMDLINE_LINUX="intel_iommu=on iommu=pt"
+# update-grub
+#
+# Get the vendor id and device id for GPU
+# lspci -nn | grep -i nvidia
+#
+# echo 'vfio-pci' > /etc/modules-load.d/vfio-pci.conf
+# echo 'options vfio-pci ids=10de:1c03,10de:10f1' > /etc/modprobe.d/vfio.conf
+# echo 'blacklist nouveau' > /etc/modprobe.d/blacklist-nouveau.conf
+# echo 'options nouveau modeset=0' >> /etc/modprobe.d/blacklist-nouveau.conf
+#
+# sudo update-initramfs -u
+#
+# reboot
+#
+# Check for these things
+# dmesg | grep -i iommu
+# dmesg | grep -i vfio
+#
+# lspci -vv | less
+# Search for NVIDIA and check if driver in use is vfio
+#
+# other libvirt tweaks
+#
+# Windows guest needs UEFI Firmware
+# Socket Core Thread setting needs to be exact
+# lscpu -e
+#
+# <cputune> # Same level as <vcpu>
+#   <vcpupin vcpu='0' cpuset='0'/>
+#   <vcpupin vcpu='1' cpuset='1'/>
+# </cputune>
+#
+# EvDev: Use same mouse and keyboard for guest and host
+# ls -al /dev/input/by-id/xxx
+# Only name with event will work, there might be more than 1
+# Use cat /dev/input/by-id/xxx-event-xxx
+# And move mouse or keyboard to check if this is the one
+#
+# Please note that if keyboard is disconnected when controlled by guest, there might be bugs that guest not able to grab it again, only reboot the guest seems work for now
+#
+# <input type="evdev">
+#   <source dev="/dev/input/by-id/$YOURMOUSE-event-mouse"/>
+# </input>
+# <input type="evdev">
+#   <source dev="/dev/input/by-id/$YOURKEYBOARD-event-kbd" grabToggle='ctrl-ctrl' grab="all" repeat="on"/>
+# </input>
+#
+# Hide info for Nvidia Driver
+#
+#<features>
+#  ...
+#  <hyperv>
+#    ...
+#    <vendor_id state='on' value='randomid'/>
+#    ...
+#  </hyperv>
+#  ...
+#</features>
+#
+#<features>
+#  ...
+#  <kvm>
+#    <hidden state='on'/>
+#  </kvm>
+#  ...
+#</features>
+#
+#
