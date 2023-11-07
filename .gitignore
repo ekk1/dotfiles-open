@@ -4,4 +4,4 @@
 *.swp
 *.pyc
 coding/openai/*.txt
-
+*.mp3

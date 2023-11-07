@@ -5,8 +5,9 @@ import os
 import json
 import requests
 
-OPENAI_API_ENDPOINT="https://api.chatanywhere.cn"
+# OPENAI_API_ENDPOINT="https://api.chatanywhere.cn"
 # OPENAI_API_ENDPOINT="https://api.chatanywhere.com.cn"
+OPENAI_API_ENDPOINT="https://api.openai.com"
 SEPRATOR = "<<>>++__--!!@@##--<<>>\n"
 
 print("Using: ", OPENAI_API_ENDPOINT)
