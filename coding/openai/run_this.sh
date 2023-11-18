@@ -1,1 +1,1 @@
-https_proxy=http://127.0.0.1:8118 python3 stream-gpt.py
+https_proxy=http://127.0.0.1:8118 python3 openai.py
