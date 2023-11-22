@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 import socket
 import time
 import string
@@ -38,24 +38,26 @@ cmds = [
     "ssh-keygen -A",
     "sleep 10",
     "sed -i 's/PasswordAuthentication no/PasswordAuthentication yes/g' /etc/ssh/sshd_config",
-    "sleep 2"
+    "sleep 2",
     "systemctl restart ssh",
-    "sleep 2"
-    "useradd -m -s /usr/bin/bash sa",
-    "sleep 2"
-    "passwd sa",
-    "sleep 2"
+    "sleep 2",
+    "useradd -m -s /usr/bin/bash user",
+    "sleep 2",
+    "passwd user",
+    "sleep 2",
     "123",
-    "sleep 2"
+    "sleep 2",
     "123",
-    "sleep 2"
+    "sleep 2",
     "passwd root",
-    "sleep 2"
+    "sleep 2",
     "321",
-    "sleep 2"
+    "sleep 2",
     "321",
-    "sleep 2"
+    "sleep 2",
     "echo 'export PATH=$PATH:/sbin:/usr/sbin' >> /root/.bashrc",
+    "sleep 2",
+    "exit",
 ]
 
 for cmd in cmds:
@@ -69,7 +71,7 @@ for cmd in cmds:
             s.send(f'sendkey {key_mapping[ch]}\n'.encode())
         else:
             raise KeyError(f"No mapping of {ch} found")
-        time.sleep(0.1)
+        time.sleep(0.15)
     s.send(f'sendkey ret\n'.encode())
     chunk = s.recv(10240)
     print(chunk.decode())

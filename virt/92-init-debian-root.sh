@@ -28,7 +28,7 @@ echo "debug 13313" >> /etc/privoxy/config
 systemctl restart privoxy
 
 apt install -y sysbench vim htop ncdu tmux git curl wget python3
-echo "alias terminalProxyStart='export https_proxy=http://127.0.0.1:8118; export all_proxy=http://127.0.0.1:8118'" >> /home/user/.bashrc
+echo "alias terminalProxyStart='export http_proxy=http://127.0.0.1:8118; export https_proxy=http://127.0.0.1:8118; export all_proxy=http://127.0.0.1:8118'" >> /home/user/.bashrc
 
 echo "RUN terminalProxyStart !!!"
 exit
