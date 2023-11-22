@@ -110,7 +110,29 @@ cat << EOF > /home/sa/01-snapshot.sh
 grim
 EOF
 cat << EOF > /root/01-start-dhcp.sh
-dhcpcd
+# dhcpcd
+ip a add 192.168.x.x/24 dev enpxxx
+ip link set enpxx up
+ip r add default via 192.168.x.1
+EOF
+cat << EOF > /root/04-start-wlan.sh
+# dhcpcd
+# iwctl
+# device list
+# station wlan0 scan
+# station wlan0 get-networks
+# station wlan0 connect xxxx
+# /var/lib/iwd/spaceship.psk (for example)
+# [Settings]
+# AutoConnect=false
+#
+ip a add 192.168.x.x/24 dev wlan0
+ip link set wlan0 up
+ip r add default via 192.168.x.1
+EOF
+cat << EOF > /etc/iwd/main.conf
+[Scan]
+DisablePeriodicScan=true
 EOF
 cat << EOF > /root/02-list-nfs-mount.sh
 showmount -e 192.168.xxx
@@ -118,4 +140,8 @@ EOF
 cat << EOF > /root/03-mount-nfs.sh
 mkdir -p /datapath
 mount -t nfs 192.168.xxx:/path /datapath
+EOF
+
+cat << EOF > /etc/sysctl.d/40-ipv6.conf
+net.ipv6.conf.all.disable_ipv6 = 1
 EOF
