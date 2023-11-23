@@ -210,47 +210,57 @@ with open("io.txt", encoding="utf8") as f:
 prompt, dialogue = decode_io(data)
 
 print("Using prompt: ", prompt)
-print("Previous dialogue: ")
-for d in dialogue:
-    if len(d['content']) > 30:
-        print(d['role'].upper() + ": " + d['content'][:30] + "[TRUNCATED]")
-    else:
-        print(d['role'].upper() + ": " + d['content'])
+if len(dialogue) > 0:
+    print("Previous dialogue: ")
+    for d in dialogue:
+        if len(d['content']) > 30:
+            print(d['role'].upper() + ": " + d['content'][:30] + "[TRUNCATED]")
+        else:
+            print(d['role'].upper() + ": " + d['content'])
 
 while True:
-    inp = input("USER: ")
-    if inp == "cc":
-        dialogue.clear()
-        init_io_file()
-        with open("io.txt", encoding="utf8") as f:
-            data = f.read()
-        prompt, dialogue = decode_io(data)
-        print("Using prompt: ", prompt)
-        continue
-    if inp == "dr":
-        ppp = input("请输入提示词: ")
-        qqq = input("请选择清晰度(hd/sd)，默认标准: ")
-        if qqq == "":
-            qqq = "standard"
-        size_list = ['1024x1024', '1792x1024', '1024x1792']
-        for ii in range(0, len(size_list)):
-            print(f"[{ii}]: {size_list[ii]}")
-        sss = input("请选择 size: ")
-        if len(sss) == 0:
-            sss = size_list[0]
-        else:
-            sss = size_list[int(sss)]
-        gpt_img(using_key, ppp, "dall-e-3", qqq, sss)
-        continue
-    if len(inp) == 0:
-        print("Input cannot be empty.")
-        continue
-    dialogue.append({"role": "user", "content": inp})
+    previous_user = ""
+    did_load_user_msg_from_io = False
+    if len(dialogue) > 0 and dialogue[-1]['role'] == "user":
+        previous_user = dialogue[-1]['content']
+        did_load_user_msg_from_io = True
+    if previous_user != "":
+        print("Previous user input: ", previous_user)
+    else:
+        previous_user = input("USER: ")
+        if previous_user == "cc":
+            dialogue.clear()
+            init_io_file()
+            with open("io.txt", encoding="utf8") as f:
+                data = f.read()
+            prompt, dialogue = decode_io(data)
+            print("Using prompt: ", prompt)
+            continue
+        if previous_user == "dr":
+            ppp = input("请输入提示词: ")
+            qqq = input("请选择清晰度(hd/sd)，默认标准: ")
+            if qqq == "":
+                qqq = "standard"
+            size_list = ['1024x1024', '1792x1024', '1024x1792']
+            for ii in range(0, len(size_list)):
+                print(f"[{ii}]: {size_list[ii]}")
+            sss = input("请选择 size: ")
+            if len(sss) == 0:
+                sss = size_list[0]
+            else:
+                sss = size_list[int(sss)]
+            gpt_img(using_key, ppp, "dall-e-3", qqq, sss)
+            continue
+        if len(previous_user) == 0:
+            print("Input cannot be empty.")
+            continue
+    dialogue.append({"role": "user", "content": previous_user})
     print("ASSISTANT: ", end="", flush=True)
     reply = gpt_text(using_key, prompt, dialogue, use_model)
     dialogue.append({"role": "assistant", "content": reply.strip()})
     with open("io.txt", 'a+', encoding="utf8") as f:
-        f.write("USER: " + inp.strip() + "\n")
-        f.write(SEPRATOR)
+        if not did_load_user_msg_from_io:
+            f.write("USER: " + previous_user.strip() + "\n")
+            f.write(SEPRATOR)
         f.write("ASSISTANT: " + reply.strip() + "\n")
         f.write(SEPRATOR)
