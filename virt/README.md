@@ -1,5 +1,8 @@
 ## Useful QEMU flags
 
+* check this https://cloudinit.readthedocs.io/en/latest/reference/datasources/nocloud.html
+* maybe use nocloud cloud-init + genericcloud image
+
 ```bash
 # Performance related
     # -enable-kvm \
