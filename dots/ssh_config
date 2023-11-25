@@ -5,10 +5,10 @@ Host *
     EscapeChar none
 
 Host vm
-        HostName 192.168.x.x
-        Port 22
-        User 11
+    HostName 192.168.x.x
+    Port 22
+    User 11
 
 Host github.com
-        ProxyCommand /usr/bin/nc -X 5 -x 127.0.0.1:10099 %h %p
-        IdentityFile /path/to/github_key
+    ProxyCommand /usr/bin/nc -X 5 -x 127.0.0.1:10099 %h %p
+    IdentityFile /path/to/github_key

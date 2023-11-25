@@ -16,7 +16,8 @@
 #
 # use Space+m to save a file to avoid error
 
-# echo "[MESSAGES CONTROL]" > ~/.pylintrc
-# echo "disable=C0103" >> ~/.pylintrc
+echo "[MESSAGES CONTROL]" > ~/.pylintrc
+echo "disable=C0103" >> ~/.pylintrc
 cp vimrc ~/.vimrc
+sed -i "s|/user/|/$USER/|" ~/.vimrc
 echo "$HOME/.vimrc" >> ~/.vim_jump_cache

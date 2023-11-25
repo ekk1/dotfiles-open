@@ -1,8 +1,8 @@
+"""some commons"""
 import subprocess
-import typing
 import datetime
 
-def run_cmd(cmd: str, env: typing.Optional[dict]=None) -> subprocess.CompletedProcess:
+def run_cmd(cmd, env=None):
     """run cmd"""
     return subprocess.run(
             ['bash', '-c' , cmd],
@@ -11,8 +11,7 @@ def run_cmd(cmd: str, env: typing.Optional[dict]=None) -> subprocess.CompletedPr
             env=env,
     )
 
-def log_print(msg: str, level: typing.Optional[str]="INFO"):
+def log_print(msg, level="INFO"):
     '''print with level and date'''
     now = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    print("[{0}][{1}]: {2}".format(now, level, msg))
-
+    print(f"[{now}][{level}]: {msg}")

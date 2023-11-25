@@ -3,6 +3,8 @@
 ## 01. Run a web server in embeddable version python under WINDOWS
 
 ```python
+# This should works in Linux and Windows
+# Put bottle.py and waitress in python-3.11.5-embed-amd64\Libs
 import sys
 sys.path.append("python-3.11.5-embed-amd64\Libs")
 
@@ -19,7 +21,9 @@ serve(app, host='127.0.0.1', port=8080)
 # Using bottle.run in this environmen will cause a warning like this
 # <frozen importlib._bootstrap>:1047: ImportWarning: _ImportRedirect.find_spec() not found; falling back to find_module()
 # although somethings bottle seems to work fine, but seems very hard to terminate the web server, this might be a problem
-# using waitress will solve this problem, and it's pure python with no additional dependencies, makes it perfect for embed python in windows 
+# using waitress will solve this problem
+# it's also pure python with no additional dependencies, makes it perfect for embed python in windows
+# Windows cmd programs will freeze when text is selected, de-select to restore, whis is expected
 ```
 
 ## 02. Use flask to create a minial web app

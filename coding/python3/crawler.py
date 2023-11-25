@@ -1,13 +1,12 @@
-# This is a script to download from seedhost box
+"""This is a script to download from seedhost box"""
 # apt install python3-requests
 # apt install python3-socks
 # apt install python3-redis
 # apt install redis-server
 
-import requests
 import argparse
 import urllib.parse
-import pprint
+import requests
 import redis
 
 parser = argparse.ArgumentParser()
@@ -34,13 +33,13 @@ CURRENT_PATH = ""
 RESOURCE_PACK = dict()
 
 if PASSWORD_FILE is not None:
-    f = open(PASSWORD_FILE)
-    a = f.read()
-    f.close()
+    with open(PASSWORD_FILE, encoding="utf8") as f:
+        a = f.read()
     content = a.split("\n")
     USERNAME, PASSWORD = content[0], content[1]
 
 def craw_page(s: requests.Session, _url: str):
+    """get a page"""
     print("Fetching: ", _url)
     p = s.get(_url)
     page_content = p.text
@@ -48,6 +47,7 @@ def craw_page(s: requests.Session, _url: str):
     r.set(_url, page_content)
 
 def decode_page(_url, page_content):
+    """decode a page"""
     resource_count = 0
     dir_count = 0
     for _line in page_content.split("\n"):
@@ -73,7 +73,7 @@ def decode_page(_url, page_content):
 
 s = requests.session()
 s.proxies = {
-    "https": "socks5h://127.0.0.1:10099",
+    "http": "socks5h://127.0.0.1:10099",
     "https": "socks5h://127.0.0.1:10099"
 }
 if USERNAME != "":
@@ -97,11 +97,11 @@ while len(PENGDING_LIST) != PENGDING_LIST_CURSOR:
     PENGDING_LIST_CURSOR += 1
     CURRENT_DEPTH += 1
 
-# pprint.pprint(RESOURCE_PACK) 
+# pprint.pprint(RESOURCE_PACK)
 # TODO: download file directly in python, curl sometimes fails to download
 for DIRR in RESOURCE_PACK:
     print(f"{DIRR}: {len(RESOURCE_PACK[DIRR])}")
-    with open(f"downloader/download-{DIRR.replace('/', '-')}.sh", 'w+') as f:
+    with open(f"downloader/download-{DIRR.replace('/', '-')}.sh", 'w+', encoding='utf8') as f:
         for file in RESOURCE_PACK[DIRR]:
             f.write(f'mkdir -p "..{DIRR}"\n')
             download_cmd = "while true; do curl --limit-rate 4M --speed-limit 5000 "

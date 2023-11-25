@@ -1,10 +1,11 @@
-import libtorrent
+"""check torrent"""
 import sys
-import os
 import pprint
 import hashlib
 import binascii
 import time
+import libtorrent
+# apt install python3-libtorrent
 
 alter_path = "./"
 t_path = sys.argv[1]
@@ -35,7 +36,8 @@ for ii in range(0, files_manager.num_files()):
         "size": files_manager.file_size(ii),
         "offset": files_manager.file_offset(ii)
     }
-# For each block, find which file it should contain, and calculate how many data it should read from this file
+# For each block, find which file it should contain,
+# and calculate how many data it should read from this file
 for ff in files:
     start_position = files[ff]["offset"]
     start_piece = start_position // block_size
@@ -155,4 +157,3 @@ print("TOTAL TIME: ", t3 - t2)
 print("Approx Speed: ", t_info.total_size() / 1024 / 1024 / (t3 - t2), "MB/s")
 
 print("================================================================")
-
