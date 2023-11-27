@@ -5,3 +5,4 @@
 # 6b55e88b027c14da1b55c85a25a9f7069d4560a8fdb2d948c986a585db469728a06d2c528303e34bb62d8b2984def38fd9ddfc00965846ff6e05b01d6e883bfe  debian-12-genericcloud-amd64-20231013-1532.qcow2
 #
 # qemu-img convert -f qcow2 -O raw img.qcow2 img.raw
+genisoimage  -output seed.iso -volid cidata -joliet -rock user-data meta-data

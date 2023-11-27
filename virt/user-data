@@ -1,0 +1,7 @@
+#cloud-config
+users:
+  - default
+  - user
+password: 123
+chpasswd: { expire: False }
+ssh_pwauth: True

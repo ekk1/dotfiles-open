@@ -3,6 +3,7 @@
 qemu-system-x86_64 \
     -m 2G -smp 2 \
     -drive file=/dev/shm/virt/testvm-1.qcow2,if=virtio \
+    -drive driver=raw,file=seed.iso,if=virtio \
     -netdev user,id=netout,hostname=testvm-1,restrict=on,hostfwd=tcp:127.0.0.1:2222-:22 \
     -device virtio-net,netdev=netout \
     -netdev socket,id=netshare,listen=127.0.0.1:3333 \

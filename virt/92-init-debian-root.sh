@@ -1,7 +1,4 @@
 #!/bin/bash
-growpart /dev/vda 1
-resize2fs /dev/vda1
-
 echo "Acquire::https::proxy \"socks5h://127.0.0.1:9050\";" >> /etc/apt/apt.conf.d/90proxy
 echo "Acquire::http::proxy \"socks5h://127.0.0.1:9050\";" >> /etc/apt/apt.conf.d/90proxy
 sed -i 's/deb.debian.org/mirrors.ustc.edu.cn/g' /etc/apt/mirrors/debian.list
