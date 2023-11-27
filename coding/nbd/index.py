@@ -7,13 +7,13 @@ def create_index_app(base_dir=""):
     app = Flask(__name__)
 
     @app.route('/set', methods=["POST"])
-    # curl 127.0.0.1:8000/set -X POST -d "data=test" 
+    # curl 127.0.0.1:8000/set -X POST -d "data=test"
     def handle_set():
         body = request.form
         name = body["name"]
         object_num = body["object_num"]
         data = base64.urlsafe_b64decode(body["data"])
-        
+
         if not os.path.exists(os.path.join(base_dir, name)):
             os.mkdir(os.path.join(base_dir, name))
 

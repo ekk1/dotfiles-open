@@ -38,6 +38,10 @@ def hello_world():
 
 if __name__ == "__main__":
     app.run("127.0.0.1", 9099)
+
+# 一般建议用 gunicorn 来运行，最简单的就是
+# gunicorn -w 1 'index:app'
+# 如果需要支持 keepalive 的话，则需要用 eventlet 的 worker, 具体可以参考 nbd 下面的 index 的实现
 ```
 ## 03. Use aiohttp to create a web web
 
