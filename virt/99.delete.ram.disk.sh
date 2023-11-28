@@ -6,3 +6,5 @@ echo "Deleting"
 
 rm -rf ${ram_virt_dir}
 
+ls -al ${ram_virt_dir}
+

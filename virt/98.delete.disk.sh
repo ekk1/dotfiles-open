@@ -7,3 +7,5 @@ echo "Deleting"
 
 rm $disk_name
 
+ls *.qcow2
+
