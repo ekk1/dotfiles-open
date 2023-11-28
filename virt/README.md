@@ -1,5 +1,13 @@
 ## Useful QEMU flags
 
+TODO:
+
+1. create linux transparent router for windows guest
+    1. finish connecting two servers
+    2. problems with dns query from windows
+    3. linux box can use redsocks to redirect tcp/udp traffic to socks5 proxy
+
+
 ```bash
 # Run this as root to create image dir
 ./00.prepare.image.sh
