@@ -1,0 +1,12 @@
+#cloud-config
+users:
+  - default
+  - name: user
+    ssh_authorized_keys:
+      - "__SSH_PUB_KEY__"
+    shell: /bin/bash
+
+system_info:
+  default_user:
+    ssh_authorized_keys:
+      - "__SSH_PUB_KEY__"

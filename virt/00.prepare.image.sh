@@ -6,10 +6,19 @@
 #
 # qemu-img convert -f qcow2 -O raw img.qcow2 img.raw
 
+if [[ ! $UID -eq 0 ]]; then
+    echo "Please run this as root"
+    exit 1
+fi
+
 base_dir="/srv/vms"
+base_ram_dir="/dev/shm/virt"
 mkdir -p ${base_dir}
+mkdir -p ${base_ram_dir}
 chmod 700 ${base_dir}
-chown nobody:nogroup ${base_dir}
+chmod 700 ${base_ram_dir}
+chown $USER:$USER ${base_dir}
+chown $USER:$USER ${base_ram_dir}
 
 echo "please download images to /srv/vms"
 echo "wget https://cloud.debian.org/images/cloud/bookworm/20231013-1532/debian-12-genericcloud-amd64-20231013-1532.qcow2"

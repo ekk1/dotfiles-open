@@ -1,7 +1,28 @@
 ## Useful QEMU flags
 
-* check this https://cloudinit.readthedocs.io/en/latest/reference/datasources/nocloud.html
-* maybe use nocloud cloud-init + genericcloud image
+```bash
+# Run this as root to create image dir
+./00.prepare.image.sh
+
+# Prepare cloud init iso
+./02.generate.ssh.key.sh
+./09.prepare.iso.sh
+
+# Create data disk
+./01.create.disk.sh /srv/vms/xxxx rr
+
+# Create linux
+./11.create.server.sh rr
+
+# Clear SSH key
+./29.clear.ssh.fingerprint.sh
+
+# Copy scripts and config
+./91-init-debian-nocloud.sh
+./98.copy.dev.config.sh
+```
+
+
 
 ```bash
 # Performance related
