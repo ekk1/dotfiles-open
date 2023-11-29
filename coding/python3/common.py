@@ -5,10 +5,11 @@ import datetime
 def run_cmd(cmd, env=None):
     """run cmd"""
     return subprocess.run(
-            ['bash', '-c' , cmd],
-            stdout=subprocess.PIPE, stderr=subprocess.PIPE,
-            universal_newlines=True,
-            env=env,
+        ['bash', '-c' , cmd],
+        stdout=subprocess.PIPE, stderr=subprocess.PIPE,
+        universal_newlines=True,
+        env=env,
+        check=False,
     )
 
 def log_print(msg, level="INFO"):

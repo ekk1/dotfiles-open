@@ -13,21 +13,51 @@ TODO:
 ./00.prepare.image.sh
 
 # Prepare cloud init iso
-./02.generate.ssh.key.sh
+./03.generate.ssh.key.sh
 ./09.prepare.iso.sh
 
-# Create data disk
-./01.create.disk.sh /srv/vms/xxxx rr
+# Create linux os disk
+# rr means create disk in ram
+./01.create.disk.sh /srv/vms/xxxx [rr]
+
+# Create empty windows disk (for first time install)
+./02.create.windows.disk.sh
+# After install, rename it to windows.base
+# Create qcow2 disk on this windows disk
+# Do note that windows qcow2 disk's size will increase rapidly
+# Not recommanded for small ram (those below 128G)
+./02.create.windows.disk.sh /srv/vms/windows.base [rr]
 
 # Create linux
-./11.create.server.sh rr
+./11.create.server.sh [rr]
 
+# Create windows
+./12.create.windows.sh [rr]
+
+# Check linux up
+./22-connect-console.sh
 # Clear SSH key
 ./29.clear.ssh.fingerprint.sh
-
 # Copy scripts and config
-./91-init-debian-nocloud.sh
-./98.copy.dev.config.sh
+./91.copy.init.scripts.sh
+./92.copy.dev.config.sh
+# SSH into vm
+./21-ssh-to-vm.sh
+
+# Connect windows vnc
+./24.connect.windows.vnc.sh
+
+# Run others in vm
+./93.init.debian.root.sh
+./94.init.debian.user.sh
+
+
+# Listing vm and files
+./31.list.vm.sh
+./32.list.dir.sh
+# Delete all disks (remember to backup needed disk!!!)
+./99.delete.disk.sh
+
 ```
 
 
