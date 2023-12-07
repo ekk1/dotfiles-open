@@ -43,7 +43,7 @@ cat << EOF >> /etc/grub.d/40_custom
 menuentry "MyRR" {
     insmod ext2
     search --no-floppy --fs-uuid --set=root $ROOT_UUID
-    linux /boot/vmlinuz-rescue.img rw
+    linux /boot/vmlinuz-rescue rw
     initrd /boot/initramfs-rescue.img
 }
 EOF
