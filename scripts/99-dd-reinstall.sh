@@ -35,19 +35,19 @@ EOF
 
 chmod +x init
 find . | cpio -H newc -o | gzip > /boot/initramfs-rescue.img
-sudo cp /path/to/custom/kernel /boot/vmlinuz-rescue
-sudo cp /path/to/custom/initramfs /boot/initramfs-rescue.img
+ROOT_UUID=$(lsblk -f | grep /$ | awk '{print $3}')
+LINUX_IMAGE=$(ls /boot/ | grep vmlinuz | tail -1)
+sudo cp /boot/${LINUX_IMAGE} /boot/vmlinuz-rescue
 
 cat << EOF >> /etc/grub.d/40_custom
-menuentry "My Custom Rescue System" {
+menuentry "MyRR" {
     insmod ext2
-    search --no-floppy --fs-uuid --set=root xxxx
+    search --no-floppy --fs-uuid --set=root $ROOT_UUID
     linux /boot/vmlinuz-rescue rw
     initrd /boot/initramfs-rescue.img
 }
 EOF
 
 sudo chmod +x /etc/grub.d/40_custom
-# chane /etc/default/grub
-# GRUB_DEFAULT="My Custom Rescue System"
-update-grub
+sed -i 's/GRUB_DEFAULT=0/GRUB_DEFAULT="MyRR"/g' /etc/default/grub
+# update-grub
