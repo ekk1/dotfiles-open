@@ -55,4 +55,7 @@ EOF
 
 chmod +x /etc/grub.d/40_custom
 sed -i 's/GRUB_DEFAULT=0/GRUB_DEFAULT="MyRR"/g' /etc/default/grub
+
+# maybe use this to reboot
+# echo b > /proc/sysrq-trigger
 # update-grub
