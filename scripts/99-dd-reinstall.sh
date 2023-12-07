@@ -24,12 +24,12 @@ cat << EOF > init
 #!/bin/busybox sh
 mount -t proc none /proc
 mount -t sysfs none /sys
+# load modules that are present on this machine helps
+# maybe can be trimmed down a little
+# (currently uses 300MB+)
+# modprobe xxx
 mount -t devtmpfs none /dev
-# insmod /lib/modules/$(uname -r)/kernel/drivers/net/your_driver.ko
-# or
-# modprobe your_driver
-# mdev -s
-
+mdev -s
 /bin/sh
 EOF
 
