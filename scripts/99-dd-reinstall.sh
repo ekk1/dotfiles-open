@@ -44,6 +44,9 @@ ROOT_UUID=$(lsblk -f | grep /$ | awk '{print $3}')
 LINUX_IMAGE=$(ls /boot/ | grep vmlinuz | tail -1)
 cp /boot/${LINUX_IMAGE} /boot/vmlinuz-rescue
 
+# for btrfs
+# insmod btrfs
+# linux /@rootfs/boot
 cat << EOF >> /etc/grub.d/40_custom
 menuentry "MyRR" {
     insmod ext2
