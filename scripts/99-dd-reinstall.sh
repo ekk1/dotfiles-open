@@ -34,6 +34,11 @@ mount -t devtmpfs none /dev
 EOF
 
 chmod +x init
+
+# mkdir -p lib/modules/$(uname -r)/kernel/drivers/{ata,scsi,}
+mkdir -p lib/modules
+cp -r /lib/modules/$(uname -r) lib/modules/
+
 find . | cpio -H newc -o | gzip > /boot/initramfs-rescue.img
 ROOT_UUID=$(lsblk -f | grep /$ | awk '{print $3}')
 LINUX_IMAGE=$(ls /boot/ | grep vmlinuz | tail -1)
