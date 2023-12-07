@@ -15,9 +15,9 @@ ldd bin/busybox
 # Maybe this is not needed?
 # i think mdev -s will create this, pending test
 cd dev
-sudo mknod -m 660 console c 5 1
-sudo mknod -m 660 null c 1 3
-sudo mknod -m 660 tty c 5 0
+mknod -m 660 console c 5 1
+mknod -m 660 null c 1 3
+mknod -m 660 tty c 5 0
 cd ..
 
 cat << EOF > init
@@ -37,7 +37,7 @@ chmod +x init
 find . | cpio -H newc -o | gzip > /boot/initramfs-rescue.img
 ROOT_UUID=$(lsblk -f | grep /$ | awk '{print $3}')
 LINUX_IMAGE=$(ls /boot/ | grep vmlinuz | tail -1)
-sudo cp /boot/${LINUX_IMAGE} /boot/vmlinuz-rescue
+cp /boot/${LINUX_IMAGE} /boot/vmlinuz-rescue
 
 cat << EOF >> /etc/grub.d/40_custom
 menuentry "MyRR" {
@@ -48,6 +48,6 @@ menuentry "MyRR" {
 }
 EOF
 
-sudo chmod +x /etc/grub.d/40_custom
+chmod +x /etc/grub.d/40_custom
 sed -i 's/GRUB_DEFAULT=0/GRUB_DEFAULT="MyRR"/g' /etc/default/grub
 # update-grub
