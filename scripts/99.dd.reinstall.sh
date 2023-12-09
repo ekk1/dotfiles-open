@@ -28,6 +28,7 @@ mount -t sysfs none /sys
 # maybe can be trimmed down a little
 # (currently uses 300MB+)
 # modprobe xxx
+$(for ii in $(lsmod  | awk '{print $1}') ; do echo "modprobe $ii" ; done)
 mount -t devtmpfs none /dev
 mdev -s
 /bin/sh
