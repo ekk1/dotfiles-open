@@ -21,3 +21,6 @@ echo "disable=C0103" >> ~/.pylintrc
 cp vimrc ~/.vimrc
 sed -i "s|/user/|/$USER/|" ~/.vimrc
 echo "$HOME/.vimrc" >> ~/.vim_jump_cache
+
+vam list
+echo "Use vam install youcompleteme to finish install"
