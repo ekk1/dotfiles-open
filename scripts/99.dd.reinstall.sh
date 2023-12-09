@@ -41,8 +41,7 @@ cp -r /lib/modules/$(uname -r) lib/modules/
 
 find . | cpio -H newc -o | gzip > /boot/initramfs-rescue.img
 ROOT_UUID=$(lsblk -f | grep /$ | awk '{print $3}')
-LINUX_IMAGE=$(ls /boot/ | grep vmlinuz | tail -1)
-cp /boot/${LINUX_IMAGE} /boot/vmlinuz-rescue
+cp /boot/vmlinuz-$(uname -r) /boot/vmlinuz-rescue
 
 # for btrfs
 # insmod btrfs
