@@ -18,4 +18,4 @@ chown $USER:$USER ${base_dir}
 chown $USER:$USER ${base_ram_dir}
 
 echo "please download images to /srv/vms"
-echo "wget https://cloud.debian.org/images/cloud/bookworm/20231013-1532/debian-12-genericcloud-amd64-20231013-1532.qcow2"
+echo "wget https://cloud.debian.org/images/cloud/bookworm/20231210-1591/debian-12-genericcloud-amd64-20231210-1591.qcow2"
