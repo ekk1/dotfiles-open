@@ -1,5 +1,5 @@
-# wget https://mirrors.ustc.edu.cn/debian-cdimage/cloud/bookworm/20231013-1532/debian-12-genericcloud-amd64-20231013-1532.qcow2
-# 6b55e88b027c14da1b55c85a25a9f7069d4560a8fdb2d948c986a585db469728a06d2c528303e34bb62d8b2984def38fd9ddfc00965846ff6e05b01d6e883bfe  debian-12-genericcloud-amd64-20231013-1532.qcow2
+# wget https://cloud.debian.org/images/cloud/bookworm/20231210-1591/debian-12-genericcloud-amd64-20231210-1591.qcow2
+# 7b7f4d34bba4a6a819dbd67ae338b46141646de7b18ae3818a7aa178d383bfbb3e9e0197c545bb2d5fd5be7f8e55a7d449b285983ae86a09a294124bb97d3d5f  debian-12-genericcloud-amd64-20231210-1591.qcow2
 #
 # qemu-img convert -f qcow2 -O raw img.qcow2 img.raw
 
