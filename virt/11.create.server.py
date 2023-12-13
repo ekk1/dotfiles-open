@@ -55,7 +55,7 @@ for _vm_no in range(0, _multi_qemu):
         ACCESS_PORT = "22"
         NIC_DRIVER = "virtio-net"
         DISK_DRIVER = ",if=virtio"
-        EXTRA_DISK = "-drive driver=raw,file=seed.iso,if=virtio,readonly "
+        EXTRA_DISK = "-drive driver=raw,file=seed.iso,if=virtio,readonly=on "
         BOOT_OPTION = "-boot d "
         VNC_PORT = str(11 + _vm_no)
         MONITOR_PORT = str(6001 + _vm_no)
@@ -86,10 +86,10 @@ for _vm_no in range(0, _multi_qemu):
     if _vm_no == 0:
         for _ppp_no in range(0, _multi_qemu - 1):
             USER_NIC += f"-netdev socket,id=netshare{1 + _ppp_no},listen=127.0.0.1:{3333 + _ppp_no} "
-            USER_NIC += f"-device {NIC_DRIVER},netdev=netshare "
+            USER_NIC += f"-device {NIC_DRIVER},netdev=netshare{1 + _ppp_no},mac=52:54:00:12:34:{11 + _ppp_no:02x} "
     else:
         USER_NIC += f"-netdev socket,id=netshare,connect=127.0.0.1:{3333 + _vm_no - 1} "
-        USER_NIC += f"-device {NIC_DRIVER},netdev=netshare{1 + _ppp_no} "
+        USER_NIC += f"-device {NIC_DRIVER},netdev=netshare,mac=52:54:00:12:35:{11 + _vm_no - 1:02x} "
 
     QEMU_BASE = "qemu-system-x86_64 "
     if aa.kvm:
