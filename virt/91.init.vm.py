@@ -33,6 +33,7 @@ _nohttps = " 1" if aa.http else ""
 
 for _vm_no in range(0, _multi_qemu):
     run_cmd(f"ssh-keygen -f \"/home/$USER/.ssh/known_hosts\" -R \"[127.0.0.1]:{2221 + _vm_no}\"", dry_run=aa.dry)
+    run_cmd(f"ssh -o \"StrictHostKeyChecking no\" -p {2221 + _vm_no} debian@127.0.0.1 -i vm_key uptime", dry_run=aa.dry)
     run_cmd(f"scp -P {2221 + _vm_no} -i vm_key 93.init.debian.root.sh debian@127.0.0.1:", dry_run=aa.dry)
     run_cmd(f"scp -P {2221 + _vm_no} -i vm_key 94.init.debian.user.sh debian@127.0.0.1:", dry_run=aa.dry)
     run_cmd(f"scp -P {2221 + _vm_no} -i vm_key 94.init.debian.user.sh user@127.0.0.1:", dry_run=aa.dry)
