@@ -88,7 +88,7 @@ for _vm_no in range(0, _multi_qemu):
             USER_NIC += f"-netdev socket,id=netshare,listen=127.0.0.1:{3333 + _ppp_no} "
             USER_NIC += f"-device {NIC_DRIVER},netdev=netshare "
     else:
-        USER_NIC += f"-netdev socket,id=netshare,connect=127.0.0.1:{3333 + _ppp_no} "
+        USER_NIC += f"-netdev socket,id=netshare,connect=127.0.0.1:{3333 + _vm_no - 1} "
         USER_NIC += f"-device {NIC_DRIVER},netdev=netshare "
 
     QEMU_BASE = "qemu-system-x86_64 "
