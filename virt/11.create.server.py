@@ -55,7 +55,7 @@ for _vm_no in range(0, _multi_qemu):
         ACCESS_PORT = "22"
         NIC_DRIVER = "virtio-net"
         DISK_DRIVER = ",if=virtio"
-        EXTRA_DISK = "-drive driver=raw,file=seed.iso,if=virtio "
+        EXTRA_DISK = "-drive driver=raw,file=seed.iso,if=virtio,readonly "
         BOOT_OPTION = "-boot d "
         VNC_PORT = str(11 + _vm_no)
         MONITOR_PORT = str(6001 + _vm_no)
