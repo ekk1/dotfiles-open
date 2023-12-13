@@ -5,4 +5,6 @@
 ./99.delete.disk.sh
 
 ./32.list.dir.sh
+
+sleep 1
 ./31.list.vm.sh
