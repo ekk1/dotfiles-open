@@ -1,16 +1,48 @@
 #!/bin/bash
-echo "Acquire::https::proxy \"socks5h://127.0.0.1:9050\";" >> /etc/apt/apt.conf.d/90proxy
-echo "Acquire::http::proxy \"socks5h://127.0.0.1:9050\";" >> /etc/apt/apt.conf.d/90proxy
-sed -i "s/deb.debian.org/$1/g" /etc/apt/mirrors/debian.list
-sed -i "s/deb.debian.org/$1/g" /etc/apt/mirrors/debian-security.list
+for i in "$@"
+do
+case $i in
+    -a=*|--apt=*)
+    MIRROR_HOST="${i#*=}"
+    ;;
+    -i=*|--interface=*)
+    INNER_NETWORK="${i#*=}"
+    ;;
+    -n=*|--http=*)
+    USE_HTTP="YES"
+    ;;
+    -p=*|--proxy=*)
+    USER_PROXY="YES"
+    ;;
+    *)
+    ;;
+esac
+done
+
+if [[ "$USER_PROXY"x == "YESx" ]]; then
+    echo "Acquire::https::proxy \"socks5h://127.0.0.1:9050\";" > /etc/apt/apt.conf.d/90proxy
+    echo "Acquire::http::proxy \"socks5h://127.0.0.1:9050\";" >> /etc/apt/apt.conf.d/90proxy
+fi
+
+sed -i "s/deb.debian.org/${MIRROR_HOST}/g" /etc/apt/mirrors/debian.list
+sed -i "s/deb.debian.org/${MIRROR_HOST}/g" /etc/apt/mirrors/debian-security.list
 # if using self hosted apt
-if [[ ! -z $2 ]]; then
+if [[ "$USE_HTTP"x == "YESx" ]]; then
     echo "Using http repo"
     sed -i 's/https/http/g' /etc/apt/mirrors/debian.list
     sed -i 's/https/http/g' /etc/apt/mirrors/debian-security.list
 fi
-sed -i 's/main/main contrib/'   /etc/apt/sources.list.d/debian.sources
-sed -i 's/deb deb-src/deb/'     /etc/apt/sources.list.d/debian.sources
+cat << EOF > /etc/apt/sources.list.d/debian.sources
+Types: deb
+URIs: mirror+file:///etc/apt/mirrors/debian.list
+Suites: bookworm bookworm-updates bookworm-backports
+Components: main contrib
+
+Types: deb
+URIs: mirror+file:///etc/apt/mirrors/debian-security.list
+Suites: bookworm-security
+Components: main contrib
+EOF
 apt update
 
 apt install -y locales
@@ -23,6 +55,32 @@ locale-gen
 apt install -y vim htop ncdu tmux curl wget python3
 apt install -y sysbench
 apt upgrade -y
+
+touch /root/00-startup.sh
+
+if [[ ! -z $INNER_NETWORK ]]; then
+cat << EOF > /root/00-startup.sh
+ip a add $INNER_NETWORK dev ens4
+ip link set ens4 up
+EOF
+bash /root/00-startup.sh
+fi
+
+# Quick firewall service
+cat << EOF > /etc/systemd/system/sa-pc-startup.service
+[Unit]
+Description=Turn on firewall
+
+[Service]
+Type=oneshot
+ExecStart=bash /root/00-startup.sh
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+systemctl daemon-reload
+systemctl enable sa-pc-startup.service
 
 cat << EOF > 00.install.http.proxy.sh
 apt install -y privoxy

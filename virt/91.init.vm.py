@@ -26,10 +26,13 @@ pp.add_argument('-q', '--dev',      action="store_true", help="install dev env")
 aa = pp.parse_args()
 
 _multi_qemu = 1
+_inner_addr_base = ""
 if aa.multi is not None:
     _multi_qemu = aa.multi
+    _inner_addr_start = 11
+    _inner_addr_base = "192.168.199."
 
-_nohttps = " 1" if aa.http else ""
+_nohttps = " -n=1" if aa.http else ""
 
 for _vm_no in range(0, _multi_qemu):
     run_cmd(f"ssh-keygen -f \"/home/$USER/.ssh/known_hosts\" -R \"[127.0.0.1]:{2221 + _vm_no}\"", dry_run=aa.dry)
@@ -39,7 +42,10 @@ for _vm_no in range(0, _multi_qemu):
     run_cmd(f"scp -P {2221 + _vm_no} -i vm_key 94.init.debian.user.sh user@127.0.0.1:", dry_run=aa.dry)
     run_cmd(f"scp -P {2221 + _vm_no} -i vm_key -r ../dots ../make-vim-better debian@127.0.0.1:", dry_run=aa.dry)
     run_cmd(f"scp -P {2221 + _vm_no} -i vm_key -r ../dots ../make-vim-better user@127.0.0.1:", dry_run=aa.dry)
-    run_cmd(f"ssh -R 9050 -p {2221 + _vm_no} debian@127.0.0.1 -i vm_key sudo bash 93.init.debian.root.sh {aa.apt}{_nohttps}", dry_run=aa.dry)
+    if _inner_addr_base != "":
+        run_cmd(f"ssh -R 9050 -p {2221 + _vm_no} debian@127.0.0.1 -i vm_key sudo bash 93.init.debian.root.sh -a={aa.apt}{_nohttps} -i={_inner_addr_base}{_inner_addr_start + _vm_no}", dry_run=aa.dry)
+    else:
+        run_cmd(f"ssh -R 9050 -p {2221 + _vm_no} debian@127.0.0.1 -i vm_key sudo bash 93.init.debian.root.sh -a={aa.apt}{_nohttps}", dry_run=aa.dry)
     if aa.proxy:
         print("Install privoxy")
     if aa.dev:
