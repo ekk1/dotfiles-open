@@ -84,20 +84,24 @@ for _vm_no in range(0, _multi_qemu):
     USER_NIC += f"hostfwd=tcp:127.0.0.1:{LISTEN_PORT}-:{ACCESS_PORT} "
     USER_NIC += f"-device {NIC_DRIVER},netdev=netout "
     if _vm_no == 0:
-        USER_NIC += "-netdev socket,id=netshare,listen=127.0.0.1:3333 "
-        USER_NIC += f"-device {NIC_DRIVER},netdev=netshare "
+        for _ppp_no in range(0, _multi_qemu - 1):
+            USER_NIC += f"-netdev socket,id=netshare,listen=127.0.0.1:{3333 + _ppp_no} "
+            USER_NIC += f"-device {NIC_DRIVER},netdev=netshare "
     else:
-        USER_NIC += "-netdev socket,id=netshare,connect=127.0.0.1:3333 "
+        USER_NIC += f"-netdev socket,id=netshare,connect=127.0.0.1:{3333 + _ppp_no} "
         USER_NIC += f"-device {NIC_DRIVER},netdev=netshare "
 
     QEMU_BASE = "qemu-system-x86_64 "
     if aa.kvm:
         QEMU_BASE += "-enable-kvm "
 
-    if aa.large:
-        QEMU_BASE += "-m 8G -smp 8 "
-    else:
+    if _multi_qemu > 1 and _vm_no == 0:
         QEMU_BASE += "-m 2G -smp 2 "
+    else:
+        if aa.large:
+            QEMU_BASE += "-m 8G -smp 8 "
+        else:
+            QEMU_BASE += "-m 2G -smp 2 "
 
     QEMU_BASE += f"-drive file={DISK_NAME}{DISK_DRIVER} "
     QEMU_BASE += EXTRA_DISK
