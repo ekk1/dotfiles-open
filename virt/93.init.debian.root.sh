@@ -60,7 +60,7 @@ touch /root/00-startup.sh
 
 if [[ ! -z $INNER_NETWORK ]]; then
 cat << EOF > /root/00-startup.sh
-ip a add $INNER_NETWORK/24 dev ens4
+ip a add $INNER_NETWORK dev ens4
 ip link set ens4 up
 EOF
 bash /root/00-startup.sh
