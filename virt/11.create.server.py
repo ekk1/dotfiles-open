@@ -93,9 +93,10 @@ for _vm_no in range(0, _multi_qemu):
         network_template +=     "      subnets:\n"
         network_template +=     "        - type: static\n"
         network_template +=    f"          address: 192.168.199.{_vm_no + 11}\n"
-        network_template +=     "          gateway: 192.168.199.11\n"
-        network_template +=     "          dns_nameservers:\n"
-        network_template +=     "            - 192.168.199.11\n"
+        if _vm_no != 0:
+            network_template +=     "          gateway: 192.168.199.11\n"
+            network_template +=     "          dns_nameservers:\n"
+            network_template +=     "            - 192.168.199.11\n"
         router_template = "\nruncmd:\n  - echo 'en_HK.UTF-8 UTF-8' > /etc/locale.gen\n"
         router_template += "  - echo 'en_US.UTF-8 UTF-8' >> /etc/locale.gen\n"
         router_template += "  - echo 'zh_CN.UTF-8 UTF-8' >> /etc/locale.gen\n"
