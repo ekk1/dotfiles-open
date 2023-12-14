@@ -3,6 +3,7 @@
 import argparse
 import os
 import subprocess
+from pathlib import Path
 
 def run_cmd(cmd, env=None, dry_run=False):
     """run cmd"""
@@ -55,7 +56,7 @@ for _vm_no in range(0, _multi_qemu):
         ACCESS_PORT = "22"
         NIC_DRIVER = "virtio-net"
         DISK_DRIVER = ",if=virtio"
-        EXTRA_DISK = "-drive driver=raw,file=seed.iso,if=virtio,readonly=on "
+        EXTRA_DISK = f"-drive driver=raw,file=seed{_vm_no}.iso,if=virtio,readonly=on "
         BOOT_OPTION = "-boot d "
         VNC_PORT = str(11 + _vm_no)
         MONITOR_PORT = str(6001 + _vm_no)
@@ -76,14 +77,43 @@ for _vm_no in range(0, _multi_qemu):
         run_cmd(f"qemu-img create -f qcow2 {base_image_flag} {DISK_NAME} 20G", dry_run=aa.dry)
         run_cmd(f"chmod 600 {DISK_NAME}", dry_run=aa.dry)
 
+    if not aa.win:
+        if not os.path.exists('vm_key'):
+            run_cmd("ssh-keygen -t ed25519 -f vm_key -N \"\"", dry_run=aa.dry)
+        key_data = Path('vm_key.pub').read_text(encoding="utf8").rstrip()
+        run_cmd(f'sed "s|__SSH_PUB_KEY__|{key_data}|" user-data-template > user-data', dry_run=aa.dry)
+        network_template =      "\nnetwork:\n"
+        network_template +=     "  version: 1\n"
+        network_template +=     "  config:\n"
+        network_template +=     "    - type: physical\n"
+        if _vm_no != 0:
+            network_template +=     "      name: ens3\n"
+        else:
+            network_template +=     "      name: ens4\n"
+        network_template +=     "      subnets:\n"
+        network_template +=     "        - type: static\n"
+        network_template +=    f"          address: 192.168.199.{_vm_no + 11}\n"
+        network_template +=     "          gateway: 192.168.199.11\n"
+        network_template +=     "          dns_nameservers:\n"
+        network_template +=     "            - 192.168.199.11\n"
+        router_template = ""
+        if _vm_no == 0:
+            router_template =       "\nruncmd:\n  - sysctl -w net.ipv4.ip_forward=1\n"
+            for _link_vms in range(0, _multi_qemu - 2):
+                router_template +=      f"  - ip link set ens{5 + _link_vms} up\n"
+        with open('user-data', 'a', encoding='utf8') as f:
+            f.write(network_template + router_template)
+        run_cmd(f"genisoimage -output seed{_vm_no}.iso -volid cidata -joliet -rock user-data meta-data", dry_run=aa.dry)
+        run_cmd(f"cp user-data user-data{_vm_no}", dry_run=aa.dry)
+
     USER_NIC = ""
 
-    USER_NIC += f"-netdev user,id=netout,hostname={VM_NAME},"
-    if not aa.net:
-        USER_NIC += "restrict=on,"
-    USER_NIC += f"hostfwd=tcp:127.0.0.1:{LISTEN_PORT}-:{ACCESS_PORT} "
-    USER_NIC += f"-device {NIC_DRIVER},netdev=netout "
     if _vm_no == 0:
+        USER_NIC += f"-netdev user,id=netout,hostname={VM_NAME},"
+        if not aa.net:
+            USER_NIC += "restrict=on,"
+        USER_NIC += f"hostfwd=tcp:127.0.0.1:{LISTEN_PORT}-:{ACCESS_PORT} "
+        USER_NIC += f"-device {NIC_DRIVER},netdev=netout "
         for _ppp_no in range(0, _multi_qemu - 1):
             USER_NIC += f"-netdev socket,id=netshare{1 + _ppp_no},listen=127.0.0.1:{3333 + _ppp_no} "
             USER_NIC += f"-device {NIC_DRIVER},netdev=netshare{1 + _ppp_no},mac=52:54:00:12:34:{11 + _ppp_no:02x} "
@@ -127,4 +157,5 @@ for _vm_no in range(0, _multi_qemu):
         QEMU_BASE += "-tpmdev emulator,id=tpm0,chardev=chrtpm "
         QEMU_BASE += "-device tpm-tis,tpmdev=tpm0 "
 
-    run_cmd(QEMU_BASE, dry_run=aa.dry)
+    #run_cmd(QEMU_BASE, dry_run=aa.dry)
+    print(QEMU_BASE)
