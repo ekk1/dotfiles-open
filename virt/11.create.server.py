@@ -96,11 +96,26 @@ for _vm_no in range(0, _multi_qemu):
         network_template +=     "          gateway: 192.168.199.11\n"
         network_template +=     "          dns_nameservers:\n"
         network_template +=     "            - 192.168.199.11\n"
-        router_template = ""
+        router_template = "\nruncmd:\n  - echo 'en_HK.UTF-8 UTF-8' > /etc/locale.gen\n"
+        router_template += "  - echo 'en_US.UTF-8 UTF-8' >> /etc/locale.gen\n"
+        router_template += "  - echo 'zh_CN.UTF-8 UTF-8' >> /etc/locale.gen\n"
+        router_template += "  - echo 'ja_JP.UTF-8 UTF-8' >> /etc/locale.gen\n"
+        router_template += "  - locale-gen\n"
+        router_template += "  - touch /root/00-startup.sh\n"
+        router_template += "  - echo '[Unit]' > /etc/systemd/system/sa-pc-startup.service\n"
+        router_template += "  - echo 'Description=Init system boot' >> /etc/systemd/system/sa-pc-startup.service\n"
+        router_template += "  - echo '[Service]' >> /etc/systemd/system/sa-pc-startup.service\n"
+        router_template += "  - echo 'Type=oneshot' >> /etc/systemd/system/sa-pc-startup.service\n"
+        router_template += "  - echo 'ExecStart=bash /root/00-startup.sh' >> /etc/systemd/system/sa-pc-startup.service\n"
+        router_template += "  - echo '[Install]' >> /etc/systemd/system/sa-pc-startup.service\n"
+        router_template += "  - echo 'WantedBy=multi-user.target' >> /etc/systemd/system/sa-pc-startup.service\n"
+        router_template += "  - systemctl daemon-reload\n"
+        router_template += "  - systemctl enable sa-pc-startup.service\n"
         if _vm_no == 0:
-            router_template =       "\nruncmd:\n  - sysctl -w net.ipv4.ip_forward=1\n"
+            router_template += "  - echo 'sysctl -w net.ipv4.ip_forward=1' >> /root/00-startup.sh\n"
             for _link_vms in range(0, _multi_qemu - 2):
-                router_template +=      f"  - ip link set ens{5 + _link_vms} up\n"
+                router_template +=      f"  - echo 'ip link set ens{5 + _link_vms} up' >> /root/00-startup.sh\n"
+            router_template += "  - bash /root/00-startup.sh\n"
         with open('user-data', 'a', encoding='utf8') as f:
             f.write(network_template + router_template)
         run_cmd(f"genisoimage -output seed{_vm_no}.iso -volid cidata -joliet -rock user-data meta-data", dry_run=aa.dry)
