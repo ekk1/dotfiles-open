@@ -100,15 +100,14 @@ for _vm_no in range(0, _multi_qemu):
         if _vm_no == 0:
             router_template += "  - echo 'sysctl -w net.ipv4.ip_forward=1' >> /root/00-startup.sh\n"
             router_template += "  - echo 'ip a add 192.168.199.11 dev ens4' >> /root/00-startup.sh\n"
-            router_template += "  - echo 'ip link set ens4 up' >> /root/00-startup.sh\n"
-            for _link_vms in range(0, _multi_qemu - 2):
-                router_template +=      f"  - echo 'ip link set ens{5 + _link_vms} up' >> /root/00-startup.sh\n"
+            for _link_vms in range(0, _multi_qemu - 1):
+                router_template +=      f"  - echo 'ip link set ens{4 + _link_vms} up' >> /root/00-startup.sh\n"
                 router_template +=      f"  - echo 'ip r add 192.168.199.{12 + _link_vms} dev ens{5 + _link_vms}' >> /root/00-startup.sh\n"
         else:
-            router_template += f"  - echo 'ip a add 192.168.11.{11 + _vm_no} dev ens3'"
-            router_template += "  - echo 'ip link set ens3 up'"
-            router_template += "  - echo 'ip r add 192.168.199.11 dev ens3'"
-            router_template += "  - echo 'ip r add default via 192.168.199.11'"
+            router_template += f"  - echo 'ip a add 192.168.11.{11 + _vm_no} dev ens3'\n"
+            router_template += "  - echo 'ip link set ens3 up'\n"
+            router_template += "  - echo 'ip r add 192.168.199.11 dev ens3'\n"
+            router_template += "  - echo 'ip r add default via 192.168.199.11'\n"
         router_template += "  - bash /root/00-startup.sh\n"
         with open('user-data', 'a', encoding='utf8') as f:
             f.write(router_template)
