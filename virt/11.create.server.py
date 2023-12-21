@@ -109,6 +109,7 @@ for _vm_no in range(0, _multi_qemu):
         router_template += cc_prefix + "URIs: mirror+file:///etc/apt/mirrors/debian.list" + apt_suffix
         router_template += cc_prefix + "Suites: bookworm bookworm-updates bookworm-backports" + apt_suffix
         router_template += cc_prefix + "Components: main contrib" + apt_suffix
+        router_template += cc_prefix + "" + apt_suffix
         router_template += cc_prefix + "Types: deb" + apt_suffix
         router_template += cc_prefix + "URIs: mirror+file:///etc/apt/mirrors/debian-security.list" + apt_suffix
         router_template += cc_prefix + "Suites: bookworm-security" + apt_suffix
