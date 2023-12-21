@@ -112,8 +112,8 @@ for _vm_no in range(0, _multi_qemu):
         router_template += cc_prefix + "URIs: mirror+file:///etc/apt/mirrors/debian-security.list" + apt_suffix
         router_template += cc_prefix + "Suites: bookworm-security" + apt_suffix
         router_template += cc_prefix + "Components: main contrib" + apt_suffix
-        router_template += cc_prefix + aa.apt + "' > /etc/apt/mirrors/debian.list"
-        router_template += cc_prefix + aa.apt + "' > /etc/apt/mirrors/debian-security.list"
+        router_template += cc_prefix + aa.apt + "' > /etc/apt/mirrors/debian.list\n"
+        router_template += cc_prefix + aa.apt + "' > /etc/apt/mirrors/debian-security.list\n"
         if _vm_no == 0:
             router_template += cc_prefix + "sysctl -w net.ipv4.ip_forward=1" + startup_suffix
             router_template += cc_prefix + "ip a add 192.168.199.11 dev ens4" + startup_suffix
