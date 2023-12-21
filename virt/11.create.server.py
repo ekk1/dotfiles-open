@@ -83,18 +83,19 @@ for _vm_no in range(0, _multi_qemu):
             run_cmd("ssh-keygen -t ed25519 -f vm_key -N \"\"", dry_run=aa.dry)
         key_data = Path('vm_key.pub').read_text(encoding="utf8").rstrip()
         run_cmd(f'sed "s|__SSH_PUB_KEY__|{key_data}|" user-data-template > user-data', dry_run=aa.dry)
-        cc_prefix = "  - echo '"
-        startup_suffix = "' >> /root/00-startup.sh\n"
-        service_suffix = "' >> /etc/systemd/system/sa-pc-startup.service\n"
-        apt_suffix = "' >> /etc/apt/sources.list.d/debian.sources\n"
-        apt_first_suffix = "' > /etc/apt/sources.list.d/debian.sources\n"
-        service_first_suffix = "' > /etc/systemd/system/sa-pc-startup.service\n"
-        router_template = "\nruncmd:\n  - echo 'en_HK.UTF-8 UTF-8' > /etc/locale.gen\n"
-        router_template += cc_prefix + "en_US.UTF-8 UTF-8' >> /etc/locale.gen\n"
-        router_template += cc_prefix + "zh_CN.UTF-8 UTF-8' >> /etc/locale.gen\n"
-        router_template += cc_prefix + "ja_JP.UTF-8 UTF-8' >> /etc/locale.gen\n"
-        router_template += "  - locale-gen\n"
-        router_template += "  - echo -n '' > /root/00-startup.sh\n"
+        cc_prefix = "  - echo \"'"
+        startup_suffix = "' >> /root/00-startup.sh\"\n"
+        service_suffix = "' >> /etc/systemd/system/sa-pc-startup.service\"\n"
+        apt_suffix = "' >> /etc/apt/sources.list.d/debian.sources\"\n"
+        apt_first_suffix = "' > /etc/apt/sources.list.d/debian.sources\"\n"
+        service_first_suffix = "' > /etc/systemd/system/sa-pc-startup.service\"\n"
+        locale_suffix = "' >> /etc/locale.gen\"\n"
+        router_template = "\nruncmd:\n  - \"echo 'en_HK.UTF-8 UTF-8' > /etc/locale.gen\"\n"
+        router_template += cc_prefix + "en_US.UTF-8 UTF-8" + locale_suffix
+        router_template += cc_prefix + "zh_CN.UTF-8 UTF-8" + locale_suffix
+        router_template += cc_prefix + "ja_JP.UTF-8 UTF-8" + locale_suffix
+        router_template += "  - \"locale-gen\"\n"
+        router_template += "  - \"echo -n '' > /root/00-startup.sh\"\n"
         router_template += cc_prefix + "[Unit]" + service_first_suffix
         router_template += cc_prefix + "Description=Init system boot" + service_suffix
         router_template += cc_prefix + "[Service]" + service_suffix
@@ -112,8 +113,8 @@ for _vm_no in range(0, _multi_qemu):
         router_template += cc_prefix + "URIs: mirror+file:///etc/apt/mirrors/debian-security.list" + apt_suffix
         router_template += cc_prefix + "Suites: bookworm-security" + apt_suffix
         router_template += cc_prefix + "Components: main contrib" + apt_suffix
-        router_template += cc_prefix + aa.apt + "' > /etc/apt/mirrors/debian.list\n"
-        router_template += cc_prefix + aa.apt + "' > /etc/apt/mirrors/debian-security.list\n"
+        router_template += cc_prefix + aa.apt + "' > /etc/apt/mirrors/debian.list\"\n"
+        router_template += cc_prefix + aa.apt + "' > /etc/apt/mirrors/debian-security.list\"\n"
         if _vm_no == 0:
             router_template += cc_prefix + "sysctl -w net.ipv4.ip_forward=1" + startup_suffix
             router_template += cc_prefix + "ip a add 192.168.199.11 dev ens4" + startup_suffix
