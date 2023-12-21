@@ -9,4 +9,4 @@
 sleep 1
 ./31.list.vm.sh
 
-for ii in {2221..2230}; do ssh-keygen -f "/home/$USER/.ssh/known_hosts" -R "[127.0.0.1]:$ii"
+for ii in {2221..2230}; do ssh-keygen -f "/home/$USER/.ssh/known_hosts" -R "[127.0.0.1]:$ii" ; done

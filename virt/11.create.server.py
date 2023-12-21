@@ -116,11 +116,12 @@ for _vm_no in range(0, _multi_qemu):
         router_template += cc_prefix + aa.apt + "' > /etc/apt/mirrors/debian.list\"\n"
         router_template += cc_prefix + aa.apt + "' > /etc/apt/mirrors/debian-security.list\"\n"
         if _vm_no == 0:
-            router_template += cc_prefix + "sysctl -w net.ipv4.ip_forward=1" + startup_suffix
-            router_template += cc_prefix + "ip a add 192.168.199.11 dev ens4" + startup_suffix
-            for _link_vms in range(0, _multi_qemu - 1):
-                router_template += cc_prefix + f"ip link set ens{4 + _link_vms} up" + startup_suffix
-                router_template += cc_prefix + f"ip r add 192.168.199.{12 + _link_vms} dev ens{5 + _link_vms}" + startup_suffix
+            if _multi_qemu > 1:
+                router_template += cc_prefix + "sysctl -w net.ipv4.ip_forward=1" + startup_suffix
+                router_template += cc_prefix + "ip a add 192.168.199.11 dev ens4" + startup_suffix
+                for _link_vms in range(0, _multi_qemu - 1):
+                    router_template += cc_prefix + f"ip link set ens{4 + _link_vms} up" + startup_suffix
+                    router_template += cc_prefix + f"ip r add 192.168.199.{12 + _link_vms} dev ens{5 + _link_vms}" + startup_suffix
         else:
             router_template += cc_prefix + f"ip a add 192.168.11.{11 + _vm_no} dev ens3" + startup_suffix
             router_template += cc_prefix + "ip link set ens3 up" + startup_suffix
