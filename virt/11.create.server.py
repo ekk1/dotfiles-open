@@ -184,5 +184,5 @@ for _vm_no in range(0, _multi_qemu):
         QEMU_BASE += "-tpmdev emulator,id=tpm0,chardev=chrtpm "
         QEMU_BASE += "-device tpm-tis,tpmdev=tpm0 "
 
-    # run_cmd(QEMU_BASE, dry_run=aa.dry)
-    print(QEMU_BASE)
+    run_cmd(QEMU_BASE, dry_run=aa.dry)
+    # print(QEMU_BASE)
