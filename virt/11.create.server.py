@@ -83,7 +83,7 @@ for _vm_no in range(0, _multi_qemu):
             run_cmd("ssh-keygen -t ed25519 -f vm_key -N \"\"", dry_run=aa.dry)
         key_data = Path('vm_key.pub').read_text(encoding="utf8").rstrip()
         run_cmd(f'sed "s|__SSH_PUB_KEY__|{key_data}|" user-data-template > user-data', dry_run=aa.dry)
-        cc_prefix = "  - echo \"'"
+        cc_prefix = "  - \"echo '"
         startup_suffix = "' >> /root/00-startup.sh\"\n"
         service_suffix = "' >> /etc/systemd/system/sa-pc-startup.service\"\n"
         apt_suffix = "' >> /etc/apt/sources.list.d/debian.sources\"\n"
