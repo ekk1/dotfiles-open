@@ -82,12 +82,14 @@ for _vm_no in range(0, _multi_qemu):
             run_cmd("ssh-keygen -t ed25519 -f vm_key -N \"\"", dry_run=aa.dry)
         key_data = Path('vm_key.pub').read_text(encoding="utf8").rstrip()
         run_cmd(f'sed "s|__SSH_PUB_KEY__|{key_data}|" user-data-template > user-data', dry_run=aa.dry)
+        startup_prefix = "  - echo '"
+        startup_suffix = "' >> /root/00-startup.sh\n"
         router_template = "\nruncmd:\n  - echo 'en_HK.UTF-8 UTF-8' > /etc/locale.gen\n"
         router_template += "  - echo 'en_US.UTF-8 UTF-8' >> /etc/locale.gen\n"
         router_template += "  - echo 'zh_CN.UTF-8 UTF-8' >> /etc/locale.gen\n"
         router_template += "  - echo 'ja_JP.UTF-8 UTF-8' >> /etc/locale.gen\n"
         router_template += "  - locale-gen\n"
-        router_template += "  - touch /root/00-startup.sh\n"
+        router_template += "  - echo -n '' > /root/00-startup.sh\n"
         router_template += "  - echo '[Unit]' > /etc/systemd/system/sa-pc-startup.service\n"
         router_template += "  - echo 'Description=Init system boot' >> /etc/systemd/system/sa-pc-startup.service\n"
         router_template += "  - echo '[Service]' >> /etc/systemd/system/sa-pc-startup.service\n"
@@ -98,16 +100,16 @@ for _vm_no in range(0, _multi_qemu):
         router_template += "  - systemctl daemon-reload\n"
         router_template += "  - systemctl enable sa-pc-startup.service\n"
         if _vm_no == 0:
-            router_template += "  - echo 'sysctl -w net.ipv4.ip_forward=1' >> /root/00-startup.sh\n"
-            router_template += "  - echo 'ip a add 192.168.199.11 dev ens4' >> /root/00-startup.sh\n"
+            router_template += startup_prefix + "sysctl -w net.ipv4.ip_forward=1" + startup_suffix
+            router_template += startup_prefix + "ip a add 192.168.199.11 dev ens4" + startup_suffix
             for _link_vms in range(0, _multi_qemu - 1):
-                router_template +=      f"  - echo 'ip link set ens{4 + _link_vms} up' >> /root/00-startup.sh\n"
-                router_template +=      f"  - echo 'ip r add 192.168.199.{12 + _link_vms} dev ens{5 + _link_vms}' >> /root/00-startup.sh\n"
+                router_template += startup_prefix + f"ip link set ens{4 + _link_vms} up" + startup_suffix
+                router_template += startup_prefix + f"ip r add 192.168.199.{12 + _link_vms} dev ens{5 + _link_vms}" + startup_suffix
         else:
-            router_template += f"  - echo 'ip a add 192.168.11.{11 + _vm_no} dev ens3'\n"
-            router_template += "  - echo 'ip link set ens3 up'\n"
-            router_template += "  - echo 'ip r add 192.168.199.11 dev ens3'\n"
-            router_template += "  - echo 'ip r add default via 192.168.199.11'\n"
+            router_template += startup_prefix + f"ip a add 192.168.11.{11 + _vm_no} dev ens3" + startup_suffix
+            router_template += startup_prefix + "ip link set ens3 up" + startup_suffix
+            router_template += startup_prefix + "ip r add 192.168.199.11 dev ens3" + startup_suffix
+            router_template += startup_prefix + "ip r add default via 192.168.199.11" + startup_suffix
         router_template += "  - bash /root/00-startup.sh\n"
         with open('user-data', 'a', encoding='utf8') as f:
             f.write(router_template)
@@ -157,13 +159,13 @@ for _vm_no in range(0, _multi_qemu):
     # QEMU_BASE += "-sandbox on,obsolete=deny,elevateprivileges=deny"
     # QEMU_BASE += ",spawn=deny,resourcecontrol=deny "
     QEMU_BASE += "-daemonize -display none "
+    QEMU_BASE += "-cpu host "
 
     if aa.tpm:
-        QEMU_BASE += "-cpu host"
         QEMU_BASE += "-bios /usr/share/ovmf/x64/OVMF.fd "
         QEMU_BASE += "-chardev socket,id=chrtpm,path=/tmp/swtpm-sock "
         QEMU_BASE += "-tpmdev emulator,id=tpm0,chardev=chrtpm "
         QEMU_BASE += "-device tpm-tis,tpmdev=tpm0 "
 
-    #run_cmd(QEMU_BASE, dry_run=aa.dry)
-    print(QEMU_BASE)
+    run_cmd(QEMU_BASE, dry_run=aa.dry)
+    # print(QEMU_BASE)
