@@ -128,6 +128,7 @@ for _vm_no in range(0, _multi_qemu):
             router_template += cc_prefix + "ip link set ens3 up" + startup_suffix
             router_template += cc_prefix + "ip r add 192.168.199.11 dev ens3" + startup_suffix
             router_template += cc_prefix + "ip r add default via 192.168.199.11" + startup_suffix
+            router_template += cc_prefix + "echo root:123 | chpasswd" + startup_suffix
         router_template += "  - bash /root/00-startup.sh\n"
         with open('user-data', 'a', encoding='utf8') as f:
             f.write(router_template)
