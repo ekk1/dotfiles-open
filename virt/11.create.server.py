@@ -30,7 +30,7 @@ pp.add_argument('-d', '--dry',      action="store_true", help="show commands but
 # pp.add_argument('-c', '--client',   action="store_true", help="client network")
 # pp.add_argument('-s', '--server',   action="store_true", help="server network")
 pp.add_argument('-m', '--multi',    type=int, help="multiple")
-pp.add_argument('-a', '--apt',      type=str, help="apt mirror to use", default="https://mirrors.ustc.edu.cn/debian")
+pp.add_argument('-a', '--apt',      type=str, help="apt mirror to use", default="https://mirrors.ustc.edu.cn")
 pp.add_argument('filename', nargs='?', help="back file to use")
 aa = pp.parse_args()
 
@@ -114,8 +114,8 @@ for _vm_no in range(0, _multi_qemu):
         router_template += cc_prefix + "URIs: mirror+file:///etc/apt/mirrors/debian-security.list" + apt_suffix
         router_template += cc_prefix + "Suites: bookworm-security" + apt_suffix
         router_template += cc_prefix + "Components: main contrib" + apt_suffix
-        router_template += cc_prefix + aa.apt + "' > /etc/apt/mirrors/debian.list\"\n"
-        router_template += cc_prefix + aa.apt + "' > /etc/apt/mirrors/debian-security.list\"\n"
+        router_template += cc_prefix + aa.apt + "/debian" + "' > /etc/apt/mirrors/debian.list\"\n"
+        router_template += cc_prefix + aa.apt + "/debian-security" + "' > /etc/apt/mirrors/debian-security.list\"\n"
         if _vm_no == 0:
             if _multi_qemu > 1:
                 router_template += cc_prefix + "sysctl -w net.ipv4.ip_forward=1" + startup_suffix
