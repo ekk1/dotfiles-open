@@ -20,6 +20,7 @@ def run_cmd(cmd, env=None, dry_run=False):
         print(_ss.stderr)
 
 pp = argparse.ArgumentParser()
+pp.add_argument('-i', '--inspect',  action="store_true", help="do not create vm, but do everything else")
 pp.add_argument('-w', '--win',      action="store_true", help="windows")
 pp.add_argument('-r', '--ram',      action="store_true", help="ram based")
 pp.add_argument('-t', '--tpm',      action="store_true", help="add tpm")
@@ -83,53 +84,63 @@ for _vm_no in range(0, _multi_qemu):
             run_cmd("ssh-keygen -t ed25519 -f vm_key -N \"\"", dry_run=aa.dry)
         key_data = Path('vm_key.pub').read_text(encoding="utf8").rstrip()
         run_cmd(f'sed "s|__SSH_PUB_KEY__|{key_data}|" user-data-template > user-data', dry_run=aa.dry)
-        cc_prefix = "  - \"echo '"
-        startup_suffix = "' >> /root/00-startup.sh\"\n"
-        service_suffix = "' >> /etc/systemd/system/sa-pc-startup.service\"\n"
-        apt_suffix = "' >> /etc/apt/sources.list.d/debian.sources\"\n"
-        apt_first_suffix = "' > /etc/apt/sources.list.d/debian.sources\"\n"
-        service_first_suffix = "' > /etc/systemd/system/sa-pc-startup.service\"\n"
-        locale_suffix = "' >> /etc/locale.gen\"\n"
-        router_template = "\nruncmd:\n  - \"echo 'en_HK.UTF-8 UTF-8' > /etc/locale.gen\"\n"
-        router_template += cc_prefix + "en_US.UTF-8 UTF-8" + locale_suffix
-        router_template += cc_prefix + "zh_CN.UTF-8 UTF-8" + locale_suffix
-        router_template += cc_prefix + "ja_JP.UTF-8 UTF-8" + locale_suffix
-        router_template += "  - \"locale-gen\"\n"
-        router_template += "  - \"echo -n '' > /root/00-startup.sh\"\n"
-        router_template += cc_prefix + "[Unit]" + service_first_suffix
-        router_template += cc_prefix + "Description=Init system boot" + service_suffix
-        router_template += cc_prefix + "[Service]" + service_suffix
-        router_template += cc_prefix + "Type=oneshot" + service_suffix
-        router_template += cc_prefix + "ExecStart=bash /root/00-startup.sh" + service_suffix
-        router_template += cc_prefix + "[Install]" + service_suffix
-        router_template += cc_prefix + "WantedBy=multi-user.target" + service_suffix
-        router_template += "  - systemctl daemon-reload\n"
-        router_template += "  - systemctl enable sa-pc-startup.service\n"
-        router_template += cc_prefix + "Types: deb" + apt_first_suffix
-        router_template += cc_prefix + "URIs: mirror+file:///etc/apt/mirrors/debian.list" + apt_suffix
-        router_template += cc_prefix + "Suites: bookworm bookworm-updates bookworm-backports" + apt_suffix
-        router_template += cc_prefix + "Components: main contrib" + apt_suffix
-        router_template += cc_prefix + "" + apt_suffix
-        router_template += cc_prefix + "Types: deb" + apt_suffix
-        router_template += cc_prefix + "URIs: mirror+file:///etc/apt/mirrors/debian-security.list" + apt_suffix
-        router_template += cc_prefix + "Suites: bookworm-security" + apt_suffix
-        router_template += cc_prefix + "Components: main contrib" + apt_suffix
-        router_template += cc_prefix + aa.apt + "/debian" + "' > /etc/apt/mirrors/debian.list\"\n"
-        router_template += cc_prefix + aa.apt + "/debian-security" + "' > /etc/apt/mirrors/debian-security.list\"\n"
+        common_prefix = "  - \""
+        common_suffix = "\"\n"
+        write_prefix = common_prefix + "echo '"
+        exec_prefix  = common_prefix
+        startup_suffix = "' >> /root/00-startup.sh" + common_suffix
+        service_suffix = "' >> /etc/systemd/system/sa-pc-startup.service" + common_suffix
+        apt_suffix = "' >> /etc/apt/sources.list.d/debian.sources" + common_suffix
+        apt_first_suffix = "' > /etc/apt/sources.list.d/debian.sources" + common_suffix
+        service_first_suffix = "' > /etc/systemd/system/sa-pc-startup.service" + common_suffix
+        locale_suffix = "' >> /etc/locale.gen" + common_suffix
+        router_template = "\nruncmd:\n"
+        router_template += write_prefix + "en_HK.UTF-8 UTF-8" + locale_suffix
+        router_template += write_prefix + "en_US.UTF-8 UTF-8" + locale_suffix
+        router_template += write_prefix + "zh_CN.UTF-8 UTF-8" + locale_suffix
+        router_template += write_prefix + "ja_JP.UTF-8 UTF-8" + locale_suffix
+        router_template += exec_prefix  + "locale-gen" + common_suffix
+        router_template += exec_prefix  + "echo -n '' > /root/00-startup.sh" + common_suffix
+        router_template += write_prefix + "[Unit]" + service_first_suffix
+        router_template += write_prefix + "Description=Init system boot" + service_suffix
+        router_template += write_prefix + "[Service]" + service_suffix
+        router_template += write_prefix + "Type=oneshot" + service_suffix
+        router_template += write_prefix + "ExecStart=bash /root/00-startup.sh" + service_suffix
+        router_template += write_prefix + "[Install]" + service_suffix
+        router_template += write_prefix + "WantedBy=multi-user.target" + service_suffix
+        router_template += exec_prefix  + "systemctl daemon-reload" + common_suffix
+        router_template += exec_prefix  + "systemctl enable sa-pc-startup.service" + common_suffix
+        router_template += write_prefix + "Types: deb" + apt_first_suffix
+        router_template += write_prefix + "URIs: mirror+file:///etc/apt/mirrors/debian.list" + apt_suffix
+        router_template += write_prefix + "Suites: bookworm bookworm-updates bookworm-backports" + apt_suffix
+        router_template += write_prefix + "Components: main contrib" + apt_suffix
+        router_template += write_prefix + "" + apt_suffix
+        router_template += write_prefix + "Types: deb" + apt_suffix
+        router_template += write_prefix + "URIs: mirror+file:///etc/apt/mirrors/debian-security.list" + apt_suffix
+        router_template += write_prefix + "Suites: bookworm-security" + apt_suffix
+        router_template += write_prefix + "Components: main contrib" + apt_suffix
+        router_template += write_prefix + aa.apt + "/debian" + "' > /etc/apt/mirrors/debian.list" + common_suffix
+        router_template += write_prefix + aa.apt + "/debian-security" + "' > /etc/apt/mirrors/debian-security.list" + common_suffix
         if _vm_no == 0:
+            # add forward rules for router vm
             if _multi_qemu > 1:
-                router_template += cc_prefix + "sysctl -w net.ipv4.ip_forward=1" + startup_suffix
-                router_template += cc_prefix + "ip a add 192.168.199.11 dev ens4" + startup_suffix
+                router_template += write_prefix + "sysctl -w net.ipv4.ip_forward=1" + startup_suffix
+                router_template += write_prefix + "ip a add 192.168.199.11 dev ens4" + startup_suffix
+                router_template += write_prefix + "iptables -t nat -A POSTROUTING -s 192.168.199.0/24 ! -d 192.168.199.0/24 -j MASQUERADE" + startup_suffix
                 for _link_vms in range(0, _multi_qemu - 1):
-                    router_template += cc_prefix + f"ip link set ens{4 + _link_vms} up" + startup_suffix
-                    router_template += cc_prefix + f"ip r add 192.168.199.{12 + _link_vms} dev ens{4 + _link_vms}" + startup_suffix
+                    router_template += write_prefix + f"ip link set ens{4 + _link_vms} up" + startup_suffix
+                    router_template += write_prefix + f"ip r add 192.168.199.{12 + _link_vms} dev ens{4 + _link_vms} src 192.168.199.11" + startup_suffix
         else:
-            router_template += cc_prefix + f"ip a add 192.168.199.{11 + _vm_no} dev ens3" + startup_suffix
-            router_template += cc_prefix + "ip link set ens3 up" + startup_suffix
-            router_template += cc_prefix + "ip r add 192.168.199.11 dev ens3" + startup_suffix
-            router_template += cc_prefix + "ip r add default via 192.168.199.11" + startup_suffix
-            router_template += cc_prefix + "echo root:123 | chpasswd" + startup_suffix
-        router_template += "  - bash /root/00-startup.sh\n"
+            # others will use router vm as gateway
+            router_template += write_prefix + "DNS=10.0.2.3" + "' >> /etc/systemd/resolved.conf" + common_suffix
+            router_template += write_prefix + f"ip a add 192.168.199.{11 + _vm_no} dev ens3" + startup_suffix
+            router_template += write_prefix + "ip link set ens3 up" + startup_suffix
+            router_template += write_prefix + "ip r add 192.168.199.11 dev ens3" + startup_suffix
+            router_template += write_prefix + "ip r add default via 192.168.199.11" + startup_suffix
+            router_template += exec_prefix  + "systemctl restart systemd-resolved.service" + common_suffix
+            router_template += exec_prefix  + "rm -rf /etc/netplan/*" + common_suffix
+            router_template += exec_prefix  + "apt purge -y cloud-init" + common_suffix
+        router_template += exec_prefix + "bash /root/00-startup.sh" + common_suffix
         with open('user-data', 'a', encoding='utf8') as f:
             f.write(router_template)
         run_cmd(f"genisoimage -output seed{_vm_no}.iso -volid cidata -joliet -rock user-data meta-data", dry_run=aa.dry)
@@ -186,5 +197,8 @@ for _vm_no in range(0, _multi_qemu):
         QEMU_BASE += "-tpmdev emulator,id=tpm0,chardev=chrtpm "
         QEMU_BASE += "-device tpm-tis,tpmdev=tpm0 "
 
-    run_cmd(QEMU_BASE, dry_run=aa.dry)
+    if aa.inspect:
+        run_cmd(QEMU_BASE, dry_run=True)
+    else:
+        run_cmd(QEMU_BASE, dry_run=aa.dry)
     # print(QEMU_BASE)
