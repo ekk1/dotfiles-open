@@ -83,7 +83,6 @@ for _vm_no in range(0, _multi_qemu):
         if not os.path.exists('vm_key'):
             run_cmd("ssh-keygen -t ed25519 -f vm_key -N \"\"", dry_run=aa.dry)
         key_data = Path('vm_key.pub').read_text(encoding="utf8").rstrip()
-        run_cmd(f'sed "s|__SSH_PUB_KEY__|{key_data}|" user-data-template > user-data', dry_run=aa.dry)
         common_prefix = "  - \""
         common_suffix = "\"\n"
         write_prefix = common_prefix + "echo '"
@@ -94,8 +93,20 @@ for _vm_no in range(0, _multi_qemu):
         apt_first_suffix = "' > /etc/apt/sources.list.d/debian.sources" + common_suffix
         service_first_suffix = "' > /etc/systemd/system/sa-pc-startup.service" + common_suffix
         locale_suffix = "' >> /etc/locale.gen" + common_suffix
-        router_template = "\nruncmd:\n"
-        router_template += write_prefix + "en_HK.UTF-8 UTF-8" + locale_suffix
+
+        router_template =   "#cloud-config\n"
+        router_template +=  "users:\n"
+        router_template +=  "  - default\n"
+        router_template +=  "  - name: user\n"
+        router_template +=  "    ssh_authorized_keys:\n"
+        router_template += f"      - \"{key_data}\"\n"
+        router_template +=  "    shell: /bin/bash\n\n"
+        router_template +=  "system_info:\n"
+        router_template +=  "  default_user:\n"
+        router_template +=  "    ssh_authorized_keys:\n"
+        router_template += f"      - \"{key_data}\"\n\n"
+        router_template += "\nruncmd:\n"
+        router_template += write_prefix + "en_HK.UTF-8 UTF-8" + "' > /etc/locale.gen" + common_suffix
         router_template += write_prefix + "en_US.UTF-8 UTF-8" + locale_suffix
         router_template += write_prefix + "zh_CN.UTF-8 UTF-8" + locale_suffix
         router_template += write_prefix + "ja_JP.UTF-8 UTF-8" + locale_suffix
@@ -143,6 +154,8 @@ for _vm_no in range(0, _multi_qemu):
         router_template += exec_prefix + "bash /root/00-startup.sh" + common_suffix
         with open('user-data', 'a', encoding='utf8') as f:
             f.write(router_template)
+        with open('meta-data', 'w', encoding='utf8') as f:
+            f.write(f"local-hostname: {VM_NAME}")
         run_cmd(f"genisoimage -output seed{_vm_no}.iso -volid cidata -joliet -rock user-data meta-data", dry_run=aa.dry)
         run_cmd(f"cp user-data user-data{_vm_no}", dry_run=aa.dry)
 
