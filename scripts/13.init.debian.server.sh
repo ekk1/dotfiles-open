@@ -7,7 +7,7 @@ apt install vim-nox vim-youcompleteme \
 # Terminal tools
 apt install ncdu htop tmux netcat-openbsd \
     wget curl iptables tig powerline ranger \
-    rsync cryptsetup ripgrep \
+    rsync cryptsetup ripgrep tree \
     ansible command-not-found elinks w3m
 
 cat << EOF > /root/00-startup.sh
@@ -16,6 +16,7 @@ iptables -X
 iptables -P INPUT DROP
 iptables -A INPUT -m state --state INVALID -j DROP
 iptables -A INPUT -m state --state RELATED,ESTABLISHED -j ACCEPT
+iptables -A INPUT -p tcp -m tcp --dport 22 -j ACCEPT
 iptables -A INPUT -i lo -j ACCEPT
 iptables -P FORWARD DROP
 EOF

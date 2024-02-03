@@ -1,18 +1,10 @@
-# Vim related
-apt install vim-nox vim-youcompleteme \
-    vim-ctrlp vim-airline \
-    vim-airline-themes vim-addon-manager \
-    vim-ale
+bash ./13.init.debian.server.sh
+
 # Fonts
 apt install fonts-noto-cjk fonts-noto-mono \
     fonts-noto-color-emoji fonts-noto-cjk-extra \
     fonts-font-awesome fonts-powerline \
     fonts-ubuntu-console
-# Terminal tools
-apt install ncdu htop tmux netcat-openbsd \
-    wget curl iptables tig powerline ranger \
-    rsync cryptsetup ripgrep \
-    ansible command-not-found elinks w3m
 
 # GUI Tools
 apt install gimp
