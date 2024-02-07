@@ -10,6 +10,9 @@ apt install ncdu htop tmux netcat-openbsd \
     rsync cryptsetup ripgrep tree \
     ansible command-not-found elinks w3m
 
+# Coding related
+apt install python3-httpbin python3-livereload fswatch
+
 cat << EOF > /root/00-startup.sh
 iptables -F
 iptables -X
