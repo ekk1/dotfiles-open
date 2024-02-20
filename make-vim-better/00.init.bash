@@ -24,3 +24,9 @@ echo "$HOME/.vimrc" >> ~/.vim_jump_cache
 
 vam list
 echo "Use vam install youcompleteme to finish install"
+
+mkdir -p ~/.vim/doc ~/.vim/ftplugin ~/.vim/lib/ftfunctions ~/.vim/plugin
+cp ftplugin/*.vim ~/.vim/ftplugin/
+cp lib/*.vim ~/.vim/lib/
+cp lib/ftfunctions/*.vim ~/.vim/lib/ftfunctions/
+cp plugin/*.vim ~/.vim/plugin/
