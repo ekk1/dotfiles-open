@@ -15,7 +15,7 @@ QUICK_PROMPT = {
 }
 
 models = [
-    "gpt-4-1106-preview",
+    "gpt-4-turbo-preview",
     "gpt-3.5-turbo-1106",
     "dall-e-3",
 ]
