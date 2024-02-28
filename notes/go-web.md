@@ -1,6 +1,10 @@
 # Some tools for better golang web programming
 
 ```bash
+# Test without cache
+GOFLAGS="-count=1" go test 
+
+
 # runs at 127.0.0.1:5000/post
 # suited for checking post params and etc
 python3 -m httpbin.core
