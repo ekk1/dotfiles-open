@@ -1,5 +1,3 @@
-bash ./13.init.debian.server.sh
-
 # Fonts
 apt install fonts-noto-cjk fonts-noto-mono \
     fonts-noto-color-emoji fonts-noto-cjk-extra \
@@ -32,33 +30,6 @@ apt install foot foot-themes
 
 # Check the readme
 # dpkg -L wireless-regdb
-
-# Quick firewall and startup script
-cat << EOF > /root/00-startup.sh
-iptables -F
-iptables -X
-iptables -P INPUT DROP
-iptables -A INPUT -m state --state INVALID -j DROP
-iptables -A INPUT -m state --state RELATED,ESTABLISHED -j ACCEPT
-iptables -A INPUT -i lo -j ACCEPT
-iptables -P FORWARD DROP
-EOF
-
-# Quick firewall service
-cat << EOF > /etc/systemd/system/sa-pc-startup.service
-[Unit]
-Description=Turn on firewall
-
-[Service]
-Type=oneshot
-ExecStart=bash /root/00-startup.sh
-
-[Install]
-WantedBy=multi-user.target
-EOF
-
-systemctl daemon-reload
-systemctl enable sa-pc-startup.service
 
 # GPU Check
 # inxi -G
