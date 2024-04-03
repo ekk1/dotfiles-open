@@ -9,8 +9,10 @@ apt install gimp
 apt install -t bookworm-backports yt-dlp
 apt install mpv lm-sensors rfkill
 apt install chromium neofetch virt-manager remmina fcitx5 fcitx5-chinese-addons
+# maybe for laptop?
 # apt install gnome-shell-extension-freon
-# apt install firmware-linux
+# firmware linux is probably needed for desktop
+apt install firmware-linux
 apt install mesa-utils inxi
 apt install fcitx5 fcitx5-chinese-addons libsecret-tools
 apt install foot foot-themes
@@ -30,6 +32,21 @@ apt install foot foot-themes
 
 # Check the readme
 # dpkg -L wireless-regdb
+
+# NVIDIA and Wayland
+# apt install linux-headers-amd64
+# apt install build-essentials
+# apt install nvidia-driver firmware-misc-nonfree
+# echo 'GRUB_CMDLINE_LINUX="$GRUB_CMDLINE_LINUX nvidia-drm.modeset=1"' > /etc/default/grub.d/nvidia-modeset.cfg
+# update-grub
+# check if services are installed, if using offical driver from website, these should already be installed
+# apt install nvidia-suspend-common
+# systemctl enable nvidia-suspend.service
+# systemctl enable nvidia-hibernate.service
+# systemctl enable nvidia-resume.service
+# cat /proc/driver/nvidia/params | grep PreserveVideoMemoryAllocations
+# this needs to be 1
+# echo 'options nvidia NVreg_PreserveVideoMemoryAllocations=1' > /etc/modprobe.d/nvidia-power-management.conf
 
 # GPU Check
 # inxi -G
