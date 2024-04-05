@@ -57,7 +57,7 @@ nnoremap <leader><space>    :nohlsearch<CR>
 nnoremap <leader><leader>   :set relativenumber!<CR>:set number!<CR>
 nnoremap <space><space>     :set paste!<CR>
 nnoremap <leader>.  :CtrlPBuffer<CR>            " call ctrlp buffer list
-nnoremap <leader>l  :CtrlPBuffer<CR>            " list all buffers
+" nnoremap <leader>l  :CtrlPBuffer<CR>            " list all buffers
 " nnoremap <leader>l  :ls<CR>                     " list all buffers
 nnoremap <leader>/  :bnext<CR>                  " goto next buffer
 nnoremap <leader>t  :enew<CR>                   " create new buffer
@@ -70,7 +70,8 @@ nnoremap <leader>w  :bp <BAR> bd #<CR><C-W>w    " close buffer and switch window
 nnoremap <space>w   <C-W>w          " switch window
 nnoremap <space>f   <C-W>o          " fullscreen window (close others)
 nnoremap <space>q   <C-W>q          " close window
-nnoremap <space>l   :marks<CR>
+" nnoremap <space>l   :marks<CR>
+nnoremap <space>l   :OutlineToggle<CR>
 nnoremap <space>o   :delmarks!<CR>
 nnoremap <space>O   :delmarks!<CR>:delmarks A-Z0-9<CR>
 nnoremap <space>s   <C-W>s
