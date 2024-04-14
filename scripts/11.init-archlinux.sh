@@ -70,8 +70,6 @@ if [[ $yn == "y" ]]; then
         lollypop gthumb grim \
         code yt-dlp \
         fcitx5-im fcitx5-chinese-addons
-    echo "Run fcitx5-configtool, add pinyin"
-    echo "run fcitx5 when needed"
 fi
 
 # startup script
@@ -158,3 +156,8 @@ EOF
 cat << EOF > /etc/sysctl.d/40-ipv6.conf
 net.ipv6.conf.all.disable_ipv6 = 1
 EOF
+
+echo "Run fcitx5-configtool, add pinyin"
+echo "run fcitx5 when needed"
+echo "Copy config_dir/ to ~/.config"
+
