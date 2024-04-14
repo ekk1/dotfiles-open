@@ -9,7 +9,7 @@ if [[ $yn == "y" ]]; then
         chrony dhcpcd ntfs-3g lsof \
         tig ncdu rsync btrfs-progs unrar \
         p7zip python openbsd-netcat \
-        powerline tk \
+        powerline tk wget \
         linux-firmware-qlogic \
         neofetch openssh chronyd
 fi
