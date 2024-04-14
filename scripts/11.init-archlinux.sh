@@ -162,3 +162,8 @@ echo "Run fcitx5-configtool, add pinyin"
 echo "run fcitx5 when needed"
 echo "Copy config_dir/ to ~/.config"
 
+echo "podman run --network=host -d --name dev debian:bookworm sleep infinity"
+echo "podman exec -it dev bash"
+echo "sed -i 's|http://deb.debian.org|http://mirrors.ustc.edu.cn|g' /etc/apt/sources.list.d/debian.sources"
+echo "apt update; apt install apt-transport-https ca-certificates"
+echo "sed -i 's|http://mirrors.ustc.edu.cn|https://mirrors.ustc.edu.cn|g' /etc/apt/sources.list.d/debian.sources"
