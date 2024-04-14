@@ -29,7 +29,8 @@ if [[ $yn == "y" ]]; then
         polkit pipewire-pulse pavucontrol \
         i3blocks i3status intel-gpu-tools \
         intel-media-driver mpv libva-utils \
-        chromium firefox hyprland dolphin
+        chromium firefox hyprland dolphin \
+        sway-contrib
 fi
 
 read -p "Do you wish to install vulkan driver?" yn
