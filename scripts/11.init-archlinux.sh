@@ -113,7 +113,7 @@ grim
 EOF
 
 cat << EOF > /root/01-start-dhcp.sh
-# systemctl start dhcpcd
+systemctl start dhcpcd
 EOF
 
 cat << EOF > /root/09-start-static.sh
@@ -139,9 +139,9 @@ cat << EOF > /root/04-start-wlan.sh
 # [Scan]
 # DisablePeriodicScan=true
 # 
-ip a add 192.168.x.x/24 dev wlan0
-ip link set wlan0 up
-ip r add default via 192.168.x.1
+# ip a add 192.168.x.x/24 dev wlan0
+# ip link set wlan0 up
+# ip r add default via 192.168.x.1
 EOF
 
 cat << EOF > /root/02-list-nfs-mount.sh
