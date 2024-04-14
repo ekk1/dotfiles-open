@@ -57,7 +57,8 @@ alias gg='git grep --ignore-case'
 alias gd='git diff'
 
 # Quick
-alias ch='chromium --proxy-server=socks5://xxxx:xxx --proxy-bypass-list=192.168.xx --ozone-platform-hint=auto'
+# alias ch='chromium --proxy-server=socks5://xxxx:xxx --proxy-bypass-list=192.168.xx --ozone-platform-hint=auto'
+alias ch='chromium --proxy-server=socks5://xxxx:xxx --proxy-bypass-list=192.168.xx.x,192.168.x.x --ozone-platform=wayland'
 alias ee='rsync -avP ~/.tmux.conf ~/.vimrc'
 alias kn='vim ~/.ssh/known_hosts'
 alias nn='cd ~/works/xxxx'
