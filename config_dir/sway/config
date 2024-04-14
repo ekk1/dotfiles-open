@@ -12,6 +12,7 @@ set $menu dmenu_path | dmenu | xargs swaymsg exec --
 
 output * {
     bg /usr/share/backgrounds/sway/Sway_Wallpaper_Blue_1920x1080.png fill
+    # scale and mode can be setup later, run sway directly and use swaymsg -t get_outputs to get monitors and modes
     # scale 2
     # position 0 0  # Note: position is divided by scale
     # mode 111x222@60Hz
