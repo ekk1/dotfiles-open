@@ -11,7 +11,7 @@ if [[ $yn == "y" ]]; then
         p7zip python openbsd-netcat \
         powerline tk \
         linux-firmware-qlogic \
-        neofetch
+        neofetch openssh
 fi
 
 read -p "Do you wish to install vim tools?" yn
