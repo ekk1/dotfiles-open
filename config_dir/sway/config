@@ -44,7 +44,7 @@ input "type:touchpad" {
 }
 # Screenshot
 # Run grimshot check first
-bindsym $mod+p  exec grimshot save area
+bindsym $mod+p  exec /usr/share/sway-contrib/grimshot save area
 bindsym $mod+Return exec $term
 bindsym $mod+Shift+q kill
 bindsym $mod+d exec $menu
@@ -67,7 +67,7 @@ bindsym $mod+Shift+Left move left
 bindsym $mod+Shift+Down move down
 bindsym $mod+Shift+Up move up
 bindsym $mod+Shift+Right move right
-bindsym $mod+Ctrl+l "swaylock -f -c 00ffff"
+bindsym $mod+Ctrl+l exec swaylock -f -c 00ffff -e -i /usr/share/backgrounds/sway/Sway_Wallpaper_Blue_1920x1080.png
 bindsym $mod+1 workspace number 1
 bindsym $mod+2 workspace number 2
 bindsym $mod+3 workspace number 3
