@@ -1,0 +1,327 @@
+" pacman -S vim-airline vim-ctrlp vim-ale
+
+set background=dark
+" colorscheme elflord
+syntax on
+set nocompatible
+filetype off
+
+set tabstop=4  " number of visual spaces per TAB
+set softtabstop=4  " number of spaces in tab when editing
+set expandtab  " tabs are spaces
+set shiftwidth=4
+
+set relativenumber " show line numbers
+set number
+set showcmd  " show command in bottom bar
+set cursorline  " highlight current line
+" set cursorcolumn
+" filetype indent on  " load filetype-specific indent files
+
+set wildmenu  " visual autocomplete for command menu
+set lazyredraw  " redraw only when we need to.
+set showmatch  " highlight matching [{()}]
+
+set incsearch  " search as characters are entered
+set hlsearch  " highlight matches
+" turn off search highlight
+let mapleader=","  " leader is comma
+" more nature split
+set splitbelow
+set splitright
+" Allow buffer to be hidden(switched)
+set hidden
+" Keep 8 lines when scroll
+set scrolloff=8
+
+set autoindent
+" set mouse=a
+set mouse=c
+let python_highlight_all = 1
+set ruler
+
+au BufReadPost *.yml.j2             set syntax=yaml
+au BufReadPost *.yaml.j2            set syntax=yaml
+au BufReadPost */playbooks/*.yml    set filetype=ansible.yaml
+au BufReadPost */roles/*.yml        set filetype=ansible.yaml
+
+set grepprg=rg\ --vimgrep\ --no-heading\ --smart-case
+
+nnoremap <leader><space>    :nohlsearch<CR>
+nnoremap <leader><leader>   :set relativenumber!<CR>:set number!<CR>
+nnoremap <space><space>     :set paste!<CR>
+nnoremap <leader>.  :CtrlPBuffer<CR>            " call ctrlp buffer list
+" nnoremap <leader>l  :CtrlPBuffer<CR>            " list all buffers
+" nnoremap <leader>l  :ls<CR>                     " list all buffers
+nnoremap <leader>/  :bnext<CR>                  " goto next buffer
+nnoremap <leader>t  :enew<CR>                   " create new buffer
+nnoremap <leader>n  :bnext<CR>                  " goto next buffer
+nnoremap <leader>p  :bprevious<CR>              " goto prev buffer
+nnoremap <leader>q  :bp <BAR> bd #<CR>          " close buffer
+nnoremap <leader>w  :bp <BAR> bd #<CR><C-W>w    " close buffer and switch window (quick when browsing)
+
+" SPACE!!
+nnoremap <space>w   <C-W>w          " switch window
+nnoremap <space>f   <C-W>o          " fullscreen window (close others)
+nnoremap <space>q   <C-W>q          " close window
+" nnoremap <space>l   :marks<CR>
+nnoremap <space>l   :OutlineToggle<CR>
+nnoremap <space>o   :delmarks!<CR>
+nnoremap <space>O   :delmarks!<CR>:delmarks A-Z0-9<CR>
+nnoremap <space>s   <C-W>s
+nnoremap <space>v   <C-W>v
+nnoremap <space>=   <C-W>=
+" search file
+nnoremap <space>p   :silent lgrep<Space>
+nnoremap <space>[   :lprevious<CR>    " Last match
+nnoremap <space>]   :lnext<CR>    " next match
+" Space navigation
+nnoremap <space>g   :ALEGoToDefinition<CR>
+nnoremap <space>t   :ALESymbolSearch<CR>
+nnoremap <space>h   <C-O>
+
+inoremap jkk <esc>
+inoremap kjj <C-x><C-o>
+nnoremap B ^
+nnoremap E $
+map <C-j> <C-W>j
+map <C-k> <C-W>k
+map <C-h> <C-W>h
+map <C-l> <C-W>l
+
+" works like harpoon
+let g:jumpfilelist = []
+" let g:vimCheetSheetLocation = "/home/user/.vimrc"
+let g:vimJumpCacheLocation = "/home/user/.vim_jump_cache"
+" call add(g:jumpfilelist, g:vimCheetSheetLocation)
+
+func! g:LoadJumpFileCache()
+    let jumpfileCacheStr = readfile(g:vimJumpCacheLocation)
+    let cacheParts = split(jumpfileCacheStr[0], ';;;;;')
+    for parts in cacheParts
+        if index(g:jumpfilelist, parts) < 0
+            call add(g:jumpfilelist, parts)
+        endif
+    endfor
+endfunc
+
+func! g:SaveJumpFileCache()
+    let saveStr = join(g:jumpfilelist, ';;;;;')
+    if writefile([saveStr], g:vimJumpCacheLocation)
+        echo 'write error'
+    endif
+endfunc
+
+call g:LoadJumpFileCache()
+
+function! g:AddJumpFile()
+    if index(g:jumpfilelist, expand('%:p')) < 0
+        call add(g:jumpfilelist, expand('%:p'))
+        call g:SaveJumpFileCache()
+    endif
+endfunction
+
+func! JumpPopCB(id, result)
+    if a:result > 0 && len(g:jumpfilelist) > 0
+        let indexx = a:result - 1
+        if indexx < len(g:jumpfilelist)
+            let fileName = g:jumpfilelist[indexx]
+            echo "You chose item: ".fileName
+            execute 'edit' l:fileName
+        endif
+    endif
+endfunc
+
+func! JumpPopDeleteCB(id, result)
+    if a:result > 0 && len(g:jumpfilelist) > 0
+        let indexx = a:result - 1
+        if indexx < len(g:jumpfilelist)
+            let ret = remove(g:jumpfilelist, indexx)
+            echo ret
+            call g:SaveJumpFileCache()
+        endif
+    endif
+endfunc
+
+func! JumpPopFilter(id, key)
+    let allowdShortCuts = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0']
+    if index(l:allowdShortCuts, a:key) >= 0
+        call popup_close(a:id, a:key)
+        return 1
+    endif
+    if a:key == 'q'
+        call popup_close(a:id, -1)
+        return 1
+    endif
+    return popup_filter_menu(a:id, a:key)
+endfunc
+
+function! g:PopQuickMenu(questionList, questionCB, titleStr)
+    let showList = []
+    let indexx = 1
+    for qqitem in a:questionList
+        call add(showList, '['.indexx.']: '.qqitem)
+        let indexx += 1
+    endfor
+    call popup_menu(showList,
+         \ #{ title: a:titleStr, filter: 'JumpPopFilter',
+         \ callback: a:questionCB, line: 25, col: 40,
+         \ highlight: 'Question', border: [], close: 'click',  padding: [1,5,1,5]} )
+endfunction
+nnoremap <space>m :call AddJumpFile()<cr>
+nnoremap <space>z :call PopQuickMenu(g:jumpfilelist, 'JumpPopCB', 'Choose file to jump')<cr>
+nnoremap <space>x :call PopQuickMenu(g:jumpfilelist, 'JumpPopDeleteCB', 'Choose item to delete')<cr>
+
+" Netrw related
+if &columns < 90
+  " If the screen is small, occupy half
+  let g:netrw_winsize = 40
+else
+  " else take 30%
+  let g:netrw_winsize = 25
+endif
+
+let g:netrw_dirhistmax = 1
+let g:netrw_keepdir = 0
+let g:netrw_localcopydircmd = 'cp -r'
+let g:netrw_liststyle = 1
+let g:netrw_list_hide = '\(^\|\s\s\)\zs\.\S\+'
+hi! link netrwMarkFile Search
+nnoremap <leader>da :Lexplore %:p:h<CR>
+nnoremap <leader>dd :Lexplore<CR>
+nnoremap <space>d :Lexplore<CR>
+nnoremap <space>a :Lexplore %:p:h<CR>
+nnoremap <space>e :Ex<CR>
+
+function! NetrwMapping()
+  " Close Netrw window
+  nmap <buffer> <leader>dd :Lexplore<CR>
+  nmap <buffer> <leader>da :Lexplore<CR>
+  nmap <buffer> <space>d :Lexplore<CR>
+  nmap <buffer> <space>a :Lexplore<CR>
+  " Go to file and close Netrw window
+  nmap <buffer> L <CR>:Lexplore<CR>
+  " Go back in history
+  nmap <buffer> H u
+  " Go up a directory
+  nmap <buffer> h -^
+  " Go down a directory / open file
+  nmap <buffer> l <CR>
+  " nmap <buffer> l <CR><C-W>w
+  " Toggle dotfiles
+  nmap <buffer> . gh
+  " Toggle the mark on a file
+  nmap <buffer> <TAB> mf
+  " Unmark all files in the buffer
+  nmap <buffer> <S-TAB> mF
+  " Unmark all files
+  nmap <buffer> <leader><TAB> mu
+  " 'Bookmark' a directory
+  nmap <buffer> bb mb
+  " Delete the most recent directory bookmark
+  nmap <buffer> bd mB
+  " Got to a directory on the most recent bookmark
+  nmap <buffer> bl qb
+  " Got to bookmark 1
+  nmap <buffer> bg gb
+  " Create a file
+  nmap <buffer> ff %:w<CR>:buffer #<CR>
+  " Rename a file
+  nmap <buffer> fr R
+  " Copy marked files (cursor dir / target dir)
+  nmap <buffer> fc mtmc
+  nmap <buffer> fC mc
+  " Move marked files (cursor dir / target dir)
+  nmap <buffer> fx mtmm
+  nmap <buffer> fX mm
+  " Execute a command on marked files
+  nmap <buffer> f; mx
+  nmap <buffer> fe mx
+  " Show the list of marked files
+  nmap <buffer> fl :echo join(netrw#Expose("netrwmarkfilelist"), "\n")<CR>
+  " Show the current target directory
+  nmap <buffer> fq :echo 'Target:' . netrw#Expose("netrwmftgt")<CR>
+  " Set the directory under the cursor as the current target
+  nmap <buffer> fd mtfq
+  " Close the preview window
+  nmap <buffer> P <C-w>z
+endfunction
+
+augroup netrw_mapping
+    autocmd!
+    autocmd filetype netrw call NetrwMapping()
+augroup END
+
+" Only for ref
+" set paste
+
+" fix ugly markdown error
+hi link markdownError Normal
+
+" CVE-2019-12735
+set modelines=0
+set nomodeline
+filetype plugin indent on
+
+" Add some plugins
+" packadd! CtrlP
+" packadd! ale
+" let g:ale_fixers = {
+"     \   'python': ['remove_trailing_lines'],
+" \}
+"
+let g:ale_completion_enabled = 1
+let g:ale_linters = {'go': ['gopls']}
+
+inoremap <silent><expr> <Tab>
+    \ pumvisible() ? "\<C-n>" : "\<TAB>"
+
+" Seems not necessary
+" let g:ycm_global_ycm_extra_conf = "~/.vim/.ycm_extra_conf.py"
+
+" More intelligent ycm complete triggers for web coding
+let g:ycm_semantic_triggers = {
+    \   'css': ['re!^\s{4}', 're!:\s+'],
+    \   'html': ['re!<', 're!</'],
+    \ }
+
+let g:ycm_gopls_binary_path = "gopls"
+let g:ycm_autoclose_preview_window_after_completion = 1
+
+function! GoFmt()
+    let saved_view = winsaveview()
+    silent %!gofmt
+    if v:shell_error > 0
+        cexpr getline(1, '$')->map({ idx, val -> val->substitute('<standard input>', expand('%'), '') })
+        silent undo
+        cwindow
+    else
+        cexpr ""
+        cclose
+    endif
+    call winrestview(saved_view)
+endfunction
+command! GoFmt call GoFmt()
+
+augroup go_autocmd
+    autocmd BufWritePre *.go GoFmt
+augroup END
+
+" Airline Custom
+let g:airline_powerline_fonts = 1
+let g:airline#extensions#tabline#enabled = 1
+
+" CtrlP Custom
+if executable('rg')
+  let g:ctrlp_user_command = 'rg %s --files --hidden --color=never --glob ""'
+endif
+let g:ctrlp_use_caching = 0
+
+" Allow code syntax inside markdown
+let g:markdown_fenced_languages = ['python', 'bash', 'yaml', 'go', 'xml']
+let g:markdown_syntax_conceal = 0
+
+" Show trailing white space as red
+highlight ExtraWhitespace ctermbg=red guibg=red
+match ExtraWhitespace /\s\+$/
+
