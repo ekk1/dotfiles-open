@@ -84,6 +84,7 @@ nnoremap <space>h   <C-O>
 
 inoremap jkk <esc>
 inoremap kjj <C-x><C-o>
+inoremap <C-j> <Esc>/[)}"'\]>]<CR>:<C-u>nohlsearch<CR>o
 nnoremap B ^
 nnoremap E $
 map <C-j> <C-W>j
