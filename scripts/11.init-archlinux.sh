@@ -43,7 +43,7 @@ if [[ $yn == "y" ]]; then
     pacman -S \
         adobe-source-han-sans-cn-fonts \
         adobe-source-han-serif-cn-fonts \
-        ttf-ubuntu-mono-nerd \
+        ttf-ubuntu-mono-nerd ttf-ubuntu-font-family \
         noto-fonts-cjk \
         noto-fonts-emoji \
         powerline-fonts
