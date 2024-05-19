@@ -1,14 +1,12 @@
 # Vim related
-apt install vim-nox vim-youcompleteme \
-    vim-ctrlp vim-airline \
-    vim-airline-themes vim-addon-manager \
-    vim-ale
+apt install vim-nox vim-ctrlp vim-ale \
+    vim-airline vim-airline-themes
 
 # Terminal tools
 apt install ncdu htop tmux netcat-openbsd \
     wget curl iptables tig powerline ranger \
     rsync cryptsetup ripgrep tree \
-    ansible command-not-found elinks w3m
+    command-not-found elinks w3m
 
 # Coding related
 apt install python3-httpbin python3-livereload fswatch
