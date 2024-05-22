@@ -52,6 +52,7 @@ for _vm_no in range(0, _multi_qemu):
         MONITOR_PORT = str(6011 + _vm_no)
         SERIAL_PORT = str(5011 + _vm_no)
         EXTRA_DEVICE = "-usb -device usb-tablet -machine pc-q35-7.2 "
+        DISK_SIZE = "100G"
     else:
         VM_NAME = 'testvm-' + str(_vm_no)
         LISTEN_PORT = str(2221 + _vm_no)
@@ -64,6 +65,7 @@ for _vm_no in range(0, _multi_qemu):
         MONITOR_PORT = str(6001 + _vm_no)
         SERIAL_PORT = str(5001 + _vm_no)
         EXTRA_DEVICE = "-device virtio-rng-pci "
+        DISK_SIZE = "20G"
 
     if aa.ram:
         DISK_NAME = f"/dev/shm/virt/{VM_NAME}.qcow2"
@@ -76,7 +78,7 @@ for _vm_no in range(0, _multi_qemu):
             run_cmd("chown $USER:$USER /dev/shm/virt", dry_run=aa.dry)
             run_cmd("chmod 700 /dev/shm/virt", dry_run=aa.dry)
         base_image_flag = f"-b {aa.filename} -F qcow2" if aa.filename is not None else ""
-        run_cmd(f"qemu-img create -f qcow2 {base_image_flag} {DISK_NAME} 20G", dry_run=aa.dry)
+        run_cmd(f"qemu-img create -f qcow2 {base_image_flag} {DISK_NAME} {DISK_SIZE}", dry_run=aa.dry)
         run_cmd(f"chmod 600 {DISK_NAME}", dry_run=aa.dry)
 
     if not aa.win:
@@ -182,7 +184,7 @@ for _vm_no in range(0, _multi_qemu):
         QEMU_BASE += "-m 2G -smp 2 "
     else:
         if aa.large:
-            QEMU_BASE += "-m 8G -smp 8 "
+            QEMU_BASE += "-m 8G -smp 2 "
         else:
             QEMU_BASE += "-m 2G -smp 2 "
 
