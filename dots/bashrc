@@ -80,6 +80,17 @@ function noterminalProxy() {
     export https_proxy=
 }
 
+function qqq() {
+    tmux new-window
+    tmux rename-windows "server"
+    tmux send-keys "su" Enter
+    tmux split-window -h
+    tmux send-keys "su" Enter
+    tmux select-layout even-veritical
+    # tmux select-layout even-horizontal
+    # tmux set synchronize-panes on
+}
+
 # ANSIBLE_RELATED
 alias ae='ansible-vault encrypt_string'
 alias av='ansible-vault view'

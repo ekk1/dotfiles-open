@@ -80,6 +80,10 @@ nnoremap <space>]   :lnext<CR>    " next match
 "nnoremap <space>g   :YcmCompleter GoToDefinitionElseDeclaration<CR>
 "nnoremap <space>t   :YcmCompleter GetType<CR>
 nnoremap <space>g   :ALEGoToDefinition<CR>
+nnoremap <leader>g  :ALEGoToDefinition<CR>
+nnoremap <leader>f  :ALEFindReferences<CR>
+nnoremap <leader>s  :ALESymbolSearch<CR>
+nnoremap <leader>m  :ALEHover<CR>
 nnoremap <space>h   <C-O>
 
 inoremap jkk <esc>
@@ -269,7 +273,7 @@ filetype plugin indent on
 " Add some plugins
 let g:ale_completion_enabled = 1
 let g:ale_linters = {'go': ['gopls']}
-" let g:ale_set_signs = 0
+let g:ale_set_signs = 0
 " This also works, but doesn't seems so useful
 set signcolumn=number
 " Allow using tab to select ale completion
