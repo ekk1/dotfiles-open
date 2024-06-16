@@ -20,7 +20,7 @@ echo "[MESSAGES CONTROL]" > ~/.pylintrc
 echo "disable=C0103" >> ~/.pylintrc
 cp vimrc ~/.vimrc
 sed -i "s|/user/|/$USER/|" ~/.vimrc
-sed -i "s/\" packadd/packadd/g" ~/.vimrc
+
 echo "$HOME/.vimrc" >> ~/.vim_jump_cache
 
 # vam list

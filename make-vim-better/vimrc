@@ -1,10 +1,5 @@
-" apt install vim-airline
-" apt install fonts-powerline
-" apt install vim-ctrlp
-" apt install vim-nox
-" apt install vim-ale
-" apt install vim-youcompleteme
-" vam install youcompleteme
+" pacman -S vim-airline vim-ctrlp vim-ale
+" apt install vim-airline vim-ctrlp vim-ale fonts-powerline vim-nox
 
 set background=dark
 " colorscheme elflord
@@ -72,8 +67,8 @@ nnoremap <space>f   <C-W>o          " fullscreen window (close others)
 nnoremap <space>q   <C-W>q          " close window
 " nnoremap <space>l   :marks<CR>
 nnoremap <space>l   :OutlineToggle<CR>
-nnoremap <space>o   :delmarks!<CR>
-nnoremap <space>O   :delmarks!<CR>:delmarks A-Z0-9<CR>
+nnoremap <space>o   :OutlineToggle<CR>
+nnoremap <space>r   :OutlineRefresh<CR>:OutlineGoToOutline<CR>
 nnoremap <space>s   <C-W>s
 nnoremap <space>v   <C-W>v
 nnoremap <space>=   <C-W>=
@@ -82,12 +77,14 @@ nnoremap <space>p   :silent lgrep<Space>
 nnoremap <space>[   :lprevious<CR>    " Last match
 nnoremap <space>]   :lnext<CR>    " next match
 " Space navigation
-nnoremap <space>g   :YcmCompleter GoToDefinitionElseDeclaration<CR>
-nnoremap <space>t   :YcmCompleter GetType<CR>
+"nnoremap <space>g   :YcmCompleter GoToDefinitionElseDeclaration<CR>
+"nnoremap <space>t   :YcmCompleter GetType<CR>
+nnoremap <space>g   :ALEGoToDefinition<CR>
 nnoremap <space>h   <C-O>
 
 inoremap jkk <esc>
 inoremap kjj <C-x><C-o>
+inoremap <C-j> <Esc>/[)}"'\]>]<CR>:<C-u>nohlsearch<CR>o
 nnoremap B ^
 nnoremap E $
 map <C-j> <C-W>j
@@ -270,8 +267,17 @@ set nomodeline
 filetype plugin indent on
 
 " Add some plugins
-packadd! CtrlP
-packadd! ale
+let g:ale_completion_enabled = 1
+let g:ale_linters = {'go': ['gopls']}
+" let g:ale_set_signs = 0
+" This also works, but doesn't seems so useful
+set signcolumn=number
+" Allow using tab to select ale completion
+inoremap <silent><expr> <Tab>
+    \ pumvisible() ? "\<C-n>" : "\<TAB>"
+
+" packadd! CtrlP
+" packadd! ale
 " let g:ale_fixers = {
 "     \   'python': ['remove_trailing_lines'],
 " \}
@@ -280,17 +286,16 @@ packadd! ale
 " let g:ycm_global_ycm_extra_conf = "~/.vim/.ycm_extra_conf.py"
 
 " More intelligent ycm complete triggers for web coding
-let g:ycm_semantic_triggers = {
-    \   'css': ['re!^\s{4}', 're!:\s+'],
-    \   'html': ['re!<', 're!</'],
-    \ }
-
-let g:ycm_gopls_binary_path = "gopls"
-let g:ycm_autoclose_preview_window_after_completion = 1
+" let g:ycm_semantic_triggers = {
+"    \   'css': ['re!^\s{4}', 're!:\s+'],
+"    \   'html': ['re!<', 're!</'],
+"    \ }
+" let g:ycm_gopls_binary_path = "gopls"
+" let g:ycm_autoclose_preview_window_after_completion = 1
 
 function! GoFmt()
     let saved_view = winsaveview()
-    silent %!gofmt
+    silent %!goimports
     if v:shell_error > 0
         cexpr getline(1, '$')->map({ idx, val -> val->substitute('<standard input>', expand('%'), '') })
         silent undo
@@ -325,3 +330,24 @@ let g:markdown_syntax_conceal = 0
 highlight ExtraWhitespace ctermbg=red guibg=red
 match ExtraWhitespace /\s\+$/
 
+au BufRead,BufNewFile *.html call HTMLAbbr()
+au BufRead,BufNewFile *.go call GoAbbr()
+au BufRead,BufNewFile *.py call PYAbbr()
+
+func PYAbbr()
+    ia ifm if __name__ == "__main__":
+endfunc
+
+func HTMLAbbr()
+    ia pp <p>!CURSOR!<CR></p><Esc>:call search('!CURSOR!','b')<CR>cf!
+    ia dd <div>!CURSOR!<CR></div><Esc>:call search('!CURSOR!','b')<CR>cf!
+endfunc
+
+func GoAbbr()
+    ia ife if err != nil {<CR>return!CURSOR!<CR>}<Esc>:call search('!CURSOR!','b')<CR>cf!
+    ia ifer if err != nil {<CR>return!CURSOR!<CR>}<Esc>:call search('!CURSOR!','b')<CR>cf!
+    ia iferr if err != nil {<CR>return!CURSOR!<CR>}<Esc>:call search('!CURSOR!','b')<CR>cf!
+    ia append append(<Esc>^vey$pa,!CURSOR!)<Esc>:call search('!CURSOR!','b')<CR>cf!
+    ia fmain func main(){<CR>!CURSOR!<CR>}<Esc>:call search('!CURSOR!','b')<CR>cf!
+    ia pac package
+endfunc
