@@ -274,6 +274,7 @@ filetype plugin indent on
 let g:ale_completion_enabled = 1
 let g:ale_linters = {'go': ['gopls']}
 let g:ale_set_signs = 0
+let g:ale_hover_to_floating_preview = 1
 " This also works, but doesn't seems so useful
 set signcolumn=number
 " Allow using tab to select ale completion
