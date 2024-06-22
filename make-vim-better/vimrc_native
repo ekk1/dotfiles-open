@@ -1,5 +1,13 @@
 " pacman -S vim-airline vim-ctrlp vim-ale
 " apt install vim-airline vim-ctrlp vim-ale fonts-powerline vim-nox
+" TODO: 
+" 1. async omni completion for at least golang, css, html, js
+" 2. nerdtree like file browser, in popupwin
+" 3. show signature in status line, when hover to vars and functions
+" 4. when calling functions, show params in a popup window
+" 5. ctrlp like file search
+" 6. more IDE like: GoToDefination, FindAllReference, SearchSymbol
+
 
 set background=dark
 " colorscheme elflord
@@ -277,6 +285,10 @@ set nomodeline
 filetype plugin indent on
 
 " Golang dev
+
+inoremap <silent><expr> <Tab>
+    \ pumvisible() ? "\<C-n>" : "\<TAB>"
+
 function! GoFmt()
     let saved_view = winsaveview()
     silent %!goimports
