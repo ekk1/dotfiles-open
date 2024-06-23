@@ -14,11 +14,6 @@ if [[ $yn == "y" ]]; then
         neofetch openssh chronyd
 fi
 
-read -p "Do you wish to install vim tools?" yn
-if [[ $yn == "y" ]]; then
-    pacman -S vim-airline vim-ctrlp vim-ale
-fi
-
 read -p "Do you wish to install GUI?" yn
 if [[ $yn == "y" ]]; then
     echo "Choose pipewire related options"
@@ -123,13 +118,13 @@ EOF
 
 cat << EOF > /root/04-start-wlan.sh
 # systemctl start dhcpcd
-# systemctl status/start iwd
+systemctl start iwd
 # iwctl
 # device list
 # station wlan0 scan
 # station wlan0 get-networks
 # station wlan0 connect xxxx
-# 
+#
 # /var/lib/iwd/spaceship.psk (for example)
 # [Settings]
 # AutoConnect=false
@@ -137,10 +132,21 @@ cat << EOF > /root/04-start-wlan.sh
 # /etc/iwd/main.conf
 # [Scan]
 # DisablePeriodicScan=true
-# 
+#
 # ip a add 192.168.x.x/24 dev wlan0
 # ip link set wlan0 up
 # ip r add default via 192.168.x.1
+EOF
+
+cat << EOF > /root/05-reconnect-wlan.sh
+iwctl station wlan disconnect
+iwctl station wlan connect xxxx
+EOF
+
+cat << EOF > /root/06-restart-network-service.sh
+systemctl restart systemd-resolved
+sleep 2
+systemctl restart chronyd
 EOF
 
 cat << EOF > /root/02-list-nfs-mount.sh
@@ -161,9 +167,3 @@ EOF
 echo "Run fcitx5-configtool, add pinyin"
 echo "run fcitx5 when needed"
 echo "Copy config_dir/ to ~/.config"
-
-echo "podman run --network=host -d --name dev debian:bookworm sleep infinity"
-echo "podman exec -it dev bash"
-echo "sed -i 's|http://deb.debian.org|http://mirrors.ustc.edu.cn|g' /etc/apt/sources.list.d/debian.sources"
-echo "apt update; apt install apt-transport-https ca-certificates"
-echo "sed -i 's|http://mirrors.ustc.edu.cn|https://mirrors.ustc.edu.cn|g' /etc/apt/sources.list.d/debian.sources"
