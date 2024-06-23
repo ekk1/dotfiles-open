@@ -115,14 +115,16 @@ let g:vimJumpCacheLocation = "~/.vim_jump_cache"
 call add(g:jumpfilelist, expand(g:vimCheetSheetLocation))
 
 func! g:LoadJumpFileCache()
-    let jumpfileCacheStr = readfile(expand(g:vimJumpCacheLocation))
-    if len(jumpfileCacheStr) > 0
-        let cacheParts = split(jumpfileCacheStr[0], ';;;;;')
-        for parts in cacheParts
-            if index(g:jumpfilelist, parts) < 0
-                call add(g:jumpfilelist, parts)
-            endif
-        endfor
+    if filereadable(expand(g:vimJumpCacheLocation)) > 0
+        let jumpfileCacheStr = readfile(expand(g:vimJumpCacheLocation))
+        if len(jumpfileCacheStr) > 0
+            let cacheParts = split(jumpfileCacheStr[0], ';;;;;')
+            for parts in cacheParts
+                if index(g:jumpfilelist, parts) < 0
+                    call add(g:jumpfilelist, parts)
+                endif
+            endfor
+        endif
     endif
 endfunc
 
