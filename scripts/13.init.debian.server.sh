@@ -6,7 +6,8 @@ apt install vim-nox vim-ctrlp vim-ale \
 apt install ncdu htop tmux netcat-openbsd \
     wget curl iptables tig powerline ranger \
     rsync cryptsetup ripgrep tree \
-    command-not-found elinks w3m
+    command-not-found elinks w3m \
+    tcpdump strace neofetch mtr-tiny fzf dstat
 
 # Coding related
 apt install python3-httpbin python3-livereload fswatch
