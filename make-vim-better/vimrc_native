@@ -350,26 +350,3 @@ func GoAbbr()
     ia fmain func main(){<CR>!CURSOR!<CR>}<Esc>:call search('!CURSOR!','b')<CR>cf!
     ia pac package
 endfunc
-
-" Async omnifunc with gopls
-set timeoutlen=500
-set omnifunc=lsp_omnifunc
-
-function! StartGopls()
-    if !exists('g:job_gopls')
-        let g:job_gopls = job_start(['gopls', 'serve'], {
-            \ 'out_cb': 'OnGoplsOutput',
-            \ 'err_cb': 'ObGoplsError'
-        })
-    endif
-endfunction
-
-function! SendGoplsRequest(request)
-    if exists('g:job_gopls')
-        call job_send(g:job_gopls, [json_encode(a:request)])
-    endif
-endfunction
-
-function! OnGoplsOutput(job_id, data, event)
-
-endfunction
