@@ -17,6 +17,35 @@ apt install mesa-utils inxi
 apt install fcitx5 fcitx5-chinese-addons libsecret-tools
 apt install foot foot-themes
 
+# Fcit5
+# run fcitx5-configtool to add libpinyin
+# run fcitx5 when OS start, this should be enough for native wayland apps like terminal
+# although sometimes no input panel
+# for chromium, add following file
+# cat .config/gtk-4.0/settings.ini
+#
+# [Settings]
+# gtk-im-module=fcitx
+#
+# and ensure im related env vars in the bashrc
+# export GTK_IM_MODULE=fcitx
+# export QT_IM_MODULE=fcitx
+# export XMODIFIERS=@im=fcitx
+#
+# run chromium with
+# chromium --enable-features=UseOzonePlatform --ozone-platform=wayland --gtk-version=4
+#
+# These should be for simple IM input experience, although sometimes there are no input panel
+# for better exp, install this
+#
+# apt install gnome-shell-extension-kimpanel
+#
+# reboot OS, or kill gdm3 process, and run
+#
+# gnome-extensions enable kimpanel@kde.org
+#
+# you should have a mostly working setup!
+
 # Sway
 # apt install sway swaybg swayidle swaylock sway-backgrounds foot foot-themes dmenu wofi i3status i3blocks
 # apt install grimshot gthumb
