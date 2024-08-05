@@ -45,6 +45,10 @@ apt install foot foot-themes
 # gnome-extensions enable kimpanel@kde.org
 #
 # you should have a mostly working setup!
+#
+# for vscode, running under wayland is not supported since GNOME doesn't support text-input-v1
+# only way is run code without wayland, and it should run under X11, which is actually ok
+# but one should notice that under fractional scaling, x11 apps will be kind of blurry
 
 # Sway
 # apt install sway swaybg swayidle swaylock sway-backgrounds foot foot-themes dmenu wofi i3status i3blocks
