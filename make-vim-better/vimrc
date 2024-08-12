@@ -98,23 +98,27 @@ map <C-l> <C-W>l
 
 " works like harpoon
 let g:jumpfilelist = []
-" let g:vimCheetSheetLocation = "/home/user/.vimrc"
-let g:vimJumpCacheLocation = "/home/user/.vim_jump_cache"
-" call add(g:jumpfilelist, g:vimCheetSheetLocation)
+let g:vimCheetSheetLocation = "~/.vimrc"
+let g:vimJumpCacheLocation = "~/.vim_jump_cache"
+call add(g:jumpfilelist, expand(g:vimCheetSheetLocation))
 
 func! g:LoadJumpFileCache()
-    let jumpfileCacheStr = readfile(g:vimJumpCacheLocation)
-    let cacheParts = split(jumpfileCacheStr[0], ';;;;;')
-    for parts in cacheParts
-        if index(g:jumpfilelist, parts) < 0
-            call add(g:jumpfilelist, parts)
+    if filereadable(expand(g:vimJumpCacheLocation)) > 0
+        let jumpfileCacheStr = readfile(expand(g:vimJumpCacheLocation))
+        if len(jumpfileCacheStr) > 0
+            let cacheParts = split(jumpfileCacheStr[0], ';;;;;')
+            for parts in cacheParts
+                if index(g:jumpfilelist, parts) < 0
+                    call add(g:jumpfilelist, parts)
+                endif
+            endfor
         endif
-    endfor
+    endif
 endfunc
 
 func! g:SaveJumpFileCache()
     let saveStr = join(g:jumpfilelist, ';;;;;')
-    if writefile([saveStr], g:vimJumpCacheLocation)
+    if writefile([saveStr], expand(g:vimJumpCacheLocation))
         echo 'write error'
     endif
 endfunc
@@ -287,17 +291,6 @@ inoremap <silent><expr> <Tab>
 "     \   'python': ['remove_trailing_lines'],
 " \}
 
-" Seems not necessary
-" let g:ycm_global_ycm_extra_conf = "~/.vim/.ycm_extra_conf.py"
-
-" More intelligent ycm complete triggers for web coding
-" let g:ycm_semantic_triggers = {
-"    \   'css': ['re!^\s{4}', 're!:\s+'],
-"    \   'html': ['re!<', 're!</'],
-"    \ }
-" let g:ycm_gopls_binary_path = "gopls"
-" let g:ycm_autoclose_preview_window_after_completion = 1
-
 function! GoFmt()
     let saved_view = winsaveview()
     silent %!goimports
@@ -314,6 +307,7 @@ endfunction
 command! GoFmt call GoFmt()
 
 augroup go_autocmd
+    autocmd!
     autocmd BufWritePre *.go GoFmt
 augroup END
 
@@ -335,6 +329,7 @@ let g:markdown_syntax_conceal = 0
 highlight ExtraWhitespace ctermbg=red guibg=red
 match ExtraWhitespace /\s\+$/
 
+" Abbr for various languages
 au BufRead,BufNewFile *.html call HTMLAbbr()
 au BufRead,BufNewFile *.go call GoAbbr()
 au BufRead,BufNewFile *.py call PYAbbr()
