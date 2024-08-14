@@ -334,6 +334,11 @@ au BufRead,BufNewFile *.html call HTMLAbbr()
 au BufRead,BufNewFile *.go call GoAbbr()
 au BufRead,BufNewFile *.py call PYAbbr()
 
+au FileType ansible.yaml    nnoremap <buffer> <C-c> I#<esc>j
+au FileType yaml            nnoremap <buffer> <C-c> I#<esc>j
+au FileType python          nnoremap <buffer> <C-c> I#<esc>j
+au FileType go              nnoremap <buffer> <C-c> I//<esc>j
+
 func PYAbbr()
     ia ifm if __name__ == "__main__":
 endfunc
