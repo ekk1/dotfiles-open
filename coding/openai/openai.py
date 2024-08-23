@@ -62,7 +62,7 @@ def list_models(k):
     try:
         aa = json.loads(r.text)
         for model in aa['data']:
-            interest_list = ['gpt', 'dall', 'whis', 'tts']
+            interest_list = ['gpt', 'dall', 'whis', 'tts', 'claude']
             for it in interest_list:
                 if it in model['id']:
                     print(model['id'])
