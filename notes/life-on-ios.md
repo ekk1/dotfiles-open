@@ -12,4 +12,6 @@ mount -t ios . app_dir
 
 # and select a folder
 
+pv xxx | shasum
+
 ```
