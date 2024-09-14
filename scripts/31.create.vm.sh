@@ -4,15 +4,18 @@ set -o errexit
 # alias vm='cd isodir; bash /path/to/31.xxx'
 
 if [[ -z $1 || -z $2 || -z $3 ]] ; then
-    echo "bash 31.create.vm.sh disk cdrom action"
+    echo "bash 31.create.vm.sh disk cdrom action [kvm] [dry]"
     echo "disk dont need qcow2 suffix"
     echo "cdrom is a must"
     echo "action: "
+    echo "when stopped: "
     echo '    q: query'
-    echo '    v: vnc'
-    echo '    k: kill'
     echo '    w: windows'
     echo '    s: start'
+    echo "when running: "
+    echo '    v: vnc'
+    echo '    k: kill'
+    echo '    s: ssh'
     exit 0
 fi
 
@@ -32,7 +35,7 @@ if ps aux | grep qemu | grep testvm ; then
             echo "Done"
             exit 0
             echo "This shouldn't happen..."
-        elif [[ $3 == "ss" ]]; then
+        elif [[ $3 == "s" ]]; then
             echo "connect to ssh"
             echo "-------------RUN THIS IN VM-----------------"
             echo "export https_proxy=http://127.0.0.1:8118"
