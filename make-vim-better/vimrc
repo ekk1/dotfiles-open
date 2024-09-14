@@ -280,6 +280,7 @@ let g:ale_linters = {'go': ['gopls'], 'python': ['pylsp']}
 let g:ale_set_signs = 0
 let g:ale_hover_to_floating_preview = 1
 " This also works, but doesn't seems so useful
+" This also works for ycm
 set signcolumn=number
 " Allow using tab to select ale completion
 inoremap <silent><expr> <Tab>
@@ -290,6 +291,17 @@ inoremap <silent><expr> <Tab>
 " let g:ale_fixers = {
 "     \   'python': ['remove_trailing_lines'],
 " \}
+
+" Seems not necessary
+" let g:ycm_global_ycm_extra_conf = "~/.vim/.ycm_extra_conf.py"
+
+" More intelligent ycm complete triggers for web coding
+" let g:ycm_semantic_triggers = {
+"    \   'css': ['re!^\s{4}', 're!:\s+'],
+"    \   'html': ['re!<', 're!</'],
+"    \ }
+" let g:ycm_gopls_binary_path = "gopls"
+" let g:ycm_autoclose_preview_window_after_completion = 1
 
 function! GoFmt()
     let saved_view = winsaveview()
@@ -322,7 +334,7 @@ endif
 let g:ctrlp_use_caching = 0
 
 " Allow code syntax inside markdown
-let g:markdown_fenced_languages = ['python', 'bash', 'yaml', 'go', 'xml', 'make']
+let g:markdown_fenced_languages = ['python', 'bash', 'yaml', 'go', 'xml', 'make', 'vim']
 let g:markdown_syntax_conceal = 0
 
 " Show trailing white space as red
@@ -338,6 +350,7 @@ au FileType ansible.yaml    nnoremap <buffer> <C-c> I#<esc>j
 au FileType yaml            nnoremap <buffer> <C-c> I#<esc>j
 au FileType python          nnoremap <buffer> <C-c> I#<esc>j
 au FileType go              nnoremap <buffer> <C-c> I//<esc>j
+au FileType sh              nnoremap <buffer> <C-c> I#<esc>j
 
 func PYAbbr()
     ia ifm if __name__ == "__main__":
