@@ -12,10 +12,13 @@ if [[ -z $1 || -z $2 || -z $3 ]] ; then
     echo '    q: query'
     echo '    w: windows'
     echo '    s: start'
+    echo '    a: archlinux install'
     echo "when running: "
+    echo '    q: query'
     echo '    v: vnc'
     echo '    k: kill'
     echo '    s: ssh'
+    echo '    ss: serial'
     exit 0
 fi
 
@@ -26,6 +29,10 @@ if ps aux | grep qemu | grep testvm ; then
             echo "connect to vnc"
             vncviewer 127.0.0.1:5911
             echo "Done"
+            exit 0
+            echo "This shouldn't happen..."
+        elif [[ $3 == "q" ]]; then
+            echo "Started"
             exit 0
             echo "This shouldn't happen..."
         elif [[ $3 == "k" ]]; then
@@ -45,6 +52,12 @@ if ps aux | grep qemu | grep testvm ; then
             echo "Done"
             exit 0
             echo "This shouldn't happen..."
+        elif [[ $3 == "ss" ]]; then
+            echo "connect to serial"
+            telnet 127.0.0.1 5001
+            echo "Done"
+            exit 0
+            echo "This shouldn't happen..."
         else
             echo "Not defined action: $3"
             exit 0
@@ -59,7 +72,7 @@ else
             echo "Not started"
             exit 0
             echo "This shouldn't happen..."
-        elif [[ $3 == "s" || $3 == "w" ]] ; then
+        elif [[ $3 == "s" || $3 == "w" || $3 == "a" ]] ; then
             echo "Starting vm"
         else
             echo "Not defined action: $3"
@@ -123,4 +136,11 @@ if [[ ! -z $5 ]] ; then
 else
     echo "Running $basic_params"
     $basic_params
+    if [[ $3 == "a" ]] ; then
+        echo "Triggering Archlinux install"
+        sleep 1
+        echo "sendkey tab" | nc -q 1 127.0.0.1 6001
+        echo " console=ttyS0,115200" | nc -q 1 127.0.0.1 5001
+        telnet 127.0.0.1 5001
+    fi
 fi
