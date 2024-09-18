@@ -22,6 +22,7 @@ if [[ -z $1 || -z $2 || -z $3 ]] ; then
     echo '    v: vnc'
     echo '    k: kill'
     echo '    s: ssh'
+    echo '    sf: forget'
     echo '    ss: serial'
     exit 0
 fi
@@ -59,6 +60,12 @@ if ps aux | grep qemu | grep testvm ; then
         elif [[ $3 == "ss" ]]; then
             echo "connect to serial"
             telnet 127.0.0.1 5001
+            echo "Done"
+            exit 0
+            echo "This shouldn't happen..."
+        elif [[ $3 == "sf" ]]; then
+            echo "forgetting"
+            ssh-keygen -R "[127.0.0.1]:2221"
             echo "Done"
             exit 0
             echo "This shouldn't happen..."
