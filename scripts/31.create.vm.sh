@@ -7,6 +7,13 @@ set -o errexit
 # possible useful virgl 3D acceleration
 # qemu-system-x86_64 -device virtio-gpu-pci,virgl=on -display gtk,gl=on
 
+# privoxy config
+# trustfile trust
+# debug 1 512 1024 4096 8192
+
+# trustfile
+# +mirrors.ustc.edu.cn
+
 if [[ -z $1 || -z $2 || -z $3 ]] ; then
     echo "bash 31.create.vm.sh disk cdrom action [kvm] [dry]"
     echo "disk dont need qcow2 suffix"
