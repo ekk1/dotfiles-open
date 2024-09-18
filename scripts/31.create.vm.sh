@@ -2,6 +2,8 @@
 set -o errexit
 # set -o xtrace
 # alias vm='cd isodir; bash /path/to/31.xxx'
+# qemu -device ?
+# qemu -device vga,?
 
 if [[ -z $1 || -z $2 || -z $3 ]] ; then
     echo "bash 31.create.vm.sh disk cdrom action [kvm] [dry]"
