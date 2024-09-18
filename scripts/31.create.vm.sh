@@ -14,6 +14,16 @@ set -o errexit
 # trustfile
 # +mirrors.ustc.edu.cn
 
+# For a typical archlinux install
+# first download arch image and gpg file, and verify it
+# now run
+# vm test archlinux.iso a aa (this is kvm install
+# this should open archlinux and auto enable it to tty
+# login with root, and passwd
+# now C+] exits
+# vm test arch.iso sf + s to login ssh
+# follow install procedure
+
 if [[ -z $1 || -z $2 || -z $3 ]] ; then
     echo "bash 31.create.vm.sh disk cdrom action [kvm] [dry]"
     echo "disk dont need qcow2 suffix"
