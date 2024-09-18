@@ -4,6 +4,8 @@ set -o errexit
 # alias vm='cd isodir; bash /path/to/31.xxx'
 # qemu -device ?
 # qemu -device vga,?
+# possible useful virgl 3D acceleration
+# qemu-system-x86_64 -device virtio-gpu-pci,virgl=on -display gtk,gl=on
 
 if [[ -z $1 || -z $2 || -z $3 ]] ; then
     echo "bash 31.create.vm.sh disk cdrom action [kvm] [dry]"
