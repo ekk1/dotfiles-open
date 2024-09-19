@@ -34,6 +34,7 @@ if [[ -z $1 || -z $2 || -z $3 ]] ; then
     echo '    w: windows'
     echo '    s: start'
     echo '    a: archlinux install'
+    echo '    aa: help for archlinux install'
     echo "when running: "
     echo '    q: query'
     echo '    v: vnc'
@@ -102,6 +103,17 @@ else
             echo "This shouldn't happen..."
         elif [[ $3 == "s" || $3 == "w" || $3 == "a" ]] ; then
             echo "Starting vm"
+        elif [[ $3 == "aa" ]] ; then
+            echo "Installing archlinux"
+            echo "first download arch image and gpg file, and verify it"
+            echo "run vm test archlinux.iso a aa (this is kvm install"
+            echo "this should open archlinux and auto enable it to tty"
+            echo "login with root, and passwd"
+            echo "now C+] exits"
+            echo "vm test arch.iso sf + s to login ssh"
+            echo "follow install procedure"
+            exit 0
+            echo "This shouldn't happen..."
         else
             echo "Not defined action: $3"
             exit 0
