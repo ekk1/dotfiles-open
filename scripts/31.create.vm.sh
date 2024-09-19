@@ -122,7 +122,7 @@ else
     fi
 fi
 
-if [[ ! -f $1 ]] ; then
+if [[ ! -f $1.qcow2 ]] ; then
     echo "No disk file, creating"
     qemu-img create -f qcow2 $1.qcow2 20G
     chmod 600 $1.qcow2
@@ -150,7 +150,9 @@ else
     echo "Create simple linux"
     basic_params+=" -m 4G -smp 2"
     basic_params+=" -drive file=$1.qcow2,if=virtio"
-    basic_params+=" -cdrom $2"
+    if [[ $3 == "a" ]]; then
+        basic_params+=" -cdrom $2"
+    fi
     basic_params+=" -netdev user,id=netout,hostname=testvm,restrict=on,hostfwd=tcp:127.0.0.1:2221-:22"
     basic_params+=" -device virtio-net,netdev=netout"
     basic_params+=" -device virtio-rng-pci"
