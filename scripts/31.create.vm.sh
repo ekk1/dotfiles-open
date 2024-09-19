@@ -40,6 +40,7 @@ if [[ -z $1 || -z $2 || -z $3 ]] ; then
     echo '    v: vnc'
     echo '    k: kill'
     echo '    s: ssh'
+    echo '    sa: ssh sa'
     echo '    sf: forget'
     echo '    ss: serial'
     exit 0
@@ -65,13 +66,17 @@ if ps aux | grep qemu | grep testvm ; then
             echo "Done"
             exit 0
             echo "This shouldn't happen..."
-        elif [[ $3 == "s" ]]; then
+        elif [[ $3 == "s" || $3 == "sa" ]]; then
             echo "connect to ssh"
             echo "-------------RUN THIS IN VM-----------------"
             echo "export https_proxy=http://127.0.0.1:8118"
             echo "export http_proxy=http://127.0.0.1:8118"
             echo "-------------RUN THIS IN VM-----------------"
-            ssh root@127.0.0.1 -p 2221 -R 127.0.0.1:8118:127.0.0.1:8118
+            if [[ $3 == "sa" ]] ; then
+                ssh sa@127.0.0.1 -p 2221 -R 127.0.0.1:8118:127.0.0.1:8118
+            else
+                ssh root@127.0.0.1 -p 2221 -R 127.0.0.1:8118:127.0.0.1:8118
+            fi
             echo "Done"
             exit 0
             echo "This shouldn't happen..."
