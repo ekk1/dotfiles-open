@@ -11,7 +11,7 @@ if [[ $yn == "y" ]]; then
         p7zip python openbsd-netcat \
         powerline tk wget \
         linux-firmware-qlogic \
-        neofetch openssh chronyd
+        neofetch openssh chronyd helix zellij
 fi
 
 read -p "Do you wish to install GUI?" yn
