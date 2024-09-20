@@ -68,6 +68,14 @@ if [[ $yn == "y" ]]; then
         fcitx5-im fcitx5-chinese-addons
 fi
 
+read -p "Do you wish to apply common settings?" yn
+if [[ $yn == "y" ]]; then
+    echo "continue"
+else
+    echo "Skipped common setting"
+    exit 0
+fi
+
 # startup script
 echo "Writing startup scripts"
 cat << EOF > /root/00-startup.sh
