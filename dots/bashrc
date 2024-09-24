@@ -18,10 +18,10 @@ alias g-='egrep -v "(^$|^#)"'
 
 # alias
 alias py='python3'
-alias v='vim'
-alias vv='vim ~/.vimrc'
-alias p='generate password'
-alias o='get password'
+alias v='helix'
+alias h='helix'
+alias vv='helix ~/.config/helix/config.toml'
+alias p="tr -cd '[:alnum:]' < /dev/urandom | fold -w30 | head -n1"
 alias ww='wget --limit-rate=3000k'
 # alias jq='python3 /path/to/jq.py'
 alias rr='ranger'
