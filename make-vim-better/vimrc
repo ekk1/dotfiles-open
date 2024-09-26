@@ -276,7 +276,7 @@ filetype plugin indent on
 
 " Add some plugins
 let g:ale_completion_enabled = 1
-let g:ale_linters = {'go': ['gopls'], 'python': ['pylsp']}
+let g:ale_linters = {'go': ['gopls'], 'python': ['pylsp', 'pylint']}
 let g:ale_set_signs = 0
 let g:ale_hover_to_floating_preview = 1
 " This also works, but doesn't seems so useful
@@ -288,6 +288,7 @@ inoremap <silent><expr> <Tab>
 
 " packadd! CtrlP
 " packadd! ale
+
 " let g:ale_fixers = {
 "     \   'python': ['remove_trailing_lines'],
 " \}
