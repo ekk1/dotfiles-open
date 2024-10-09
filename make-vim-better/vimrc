@@ -279,6 +279,27 @@ let g:ale_completion_enabled = 1
 let g:ale_linters = {'go': ['gopls'], 'python': ['pylsp', 'pylint']}
 let g:ale_set_signs = 0
 let g:ale_hover_to_floating_preview = 1
+let g:ale_floating_window_border = ['│', '─', '╭', '╮', '╯', '╰', '│', '─']
+"autocmd CursorMoved * if exists('*ale#lsp#Send') | call ale#hover#ShowTruncatedMessageAtCursor() | endif
+"autocmd CursorMoved * if exists('*ale#lsp#Send') | call ale#hover#ShowAtCursor() | endif
+"autocmd CursorMovedI * if exists('*ale#lsp#Send') | call ale#hover#ShowAtCursor() | endif
+function! DelayedCursorMoved()
+    if exists('*ale#lsp#Send')
+        if exists('t:cursor_moved_hhover')
+            call timer_stop(t:cursor_moved_hhover)
+            unlet t:cursor_moved_hhover
+        endif
+        let t:cursor_moved_hhover = timer_start(400, 'OnDelayedCursorMoved')
+    endif
+endfunction
+
+function! OnDelayedCursorMoved(timer)
+    if exists('*ale#lsp#Send')
+        call ale#hover#ShowAtCursor()
+    endif
+endfunction
+autocmd CursorMoved * call DelayedCursorMoved()
+autocmd CursorMovedI * call DelayedCursorMoved()
 " This also works, but doesn't seems so useful
 " This also works for ycm
 set signcolumn=number
