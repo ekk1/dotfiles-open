@@ -10,7 +10,7 @@
 # syn match markdownOrderedListMarker "\%(\t\| \{0,16}\)\<\d\+\.\%(\s\+\S\)\@=" contained
 
 cp vimrc ~/.vimrc
-sed -i "" "s|/user/|/$USER/|g" ~/.vimrc
-sed -i "" "s|/home/|/Users/|g" ~/.vimrc
-
-echo "$HOME/.vimrc" >> ~/.vim_jump_cache
+mkdir -p ~/.vim/pack/git-plugins/start/
+cp 3rdparty/ale-deb ~/.vim/pack/git-plugins/start/
+cp 3rdparty/vim-airline ~/.vim/pack/git-plugins/start/
+cp 3rdparty/ctrlp.vim-deb ~/.vim/pack/git-plugins/start/
