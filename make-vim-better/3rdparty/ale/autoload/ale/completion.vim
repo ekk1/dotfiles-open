@@ -192,20 +192,6 @@ function! ale#completion#GetTriggerCharacter(filetype, prefix) abort
     return ''
 endfunction
 
-function! FuzzyMatch(word, pattern)
-    let l:word = tolower(a:word)
-    let l:pattern = tolower(a:pattern)
-    let l:wi = 0
-    let l:pi = 0
-    while l:wi < len(l:word) && l:pi < len(l:pattern)
-        if l:word[l:wi] == l:pattern[l:pi]
-	    let l:pi += 1
-	endif
-	let l:wi += 1
-    endwhile
-    return l:pi == len(l:pattern)
-endfunction
-
 function! ale#completion#Filter(
 \   buffer,
 \   filetype,
@@ -247,12 +233,9 @@ function! ale#completion#Filter(
                 else
                     " Add suggestions if the suggestion starts with a
                     " case-insensitive match for the prefix.
-                    " if l:word[: len(a:prefix) - 1] is? a:prefix
-                    "    call add(l:filtered_suggestions, l:item)
-                    " endif
-		    if FuzzyMatch(l:word, a:prefix)
-			call add(l:filtered_suggestions, l:item)
-		    endif
+                    if l:word[: len(a:prefix) - 1] is? a:prefix
+                        call add(l:filtered_suggestions, l:item)
+                    endif
                 endif
             endfor
         endif
@@ -841,6 +824,8 @@ endfunction
 " the current buffer. 1 will be returned if there's a potential source of
 " completion data ALE can use, and 0 will be returned otherwise.
 function! ale#completion#CanProvideCompletions() abort
+    " NOTE: We can report that ALE can provide completions to Deoplete from
+    " here, and we might ignore linters still below.
     for l:linter in ale#linter#Get(&filetype)
         if !empty(l:linter.lsp)
             return 1
@@ -907,11 +892,9 @@ function! ale#completion#GetCompletions(...) abort
 
     let l:started = 0
 
-    for l:linter in ale#linter#Get(&filetype)
-        if !empty(l:linter.lsp)
-            if ale#lsp_linter#StartLSP(l:buffer, l:linter, l:Callback)
-                let l:started = 1
-            endif
+    for l:linter in ale#lsp_linter#GetEnabled(l:buffer)
+        if ale#lsp_linter#StartLSP(l:buffer, l:linter, l:Callback)
+            let l:started = 1
         endif
     endfor
 

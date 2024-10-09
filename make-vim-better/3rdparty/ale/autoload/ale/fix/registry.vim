@@ -7,6 +7,11 @@ let s:default_registry = {
 \       'suggested_filetypes': ['python'],
 \       'description': 'Add blank lines before control statements.',
 \   },
+\   'alejandra': {
+\       'function': 'ale#fixers#alejandra#Fix',
+\       'suggested_filetypes': ['nix'],
+\       'description': 'The Uncompromising Nix Code Formatter',
+\   },
 \   'align_help_tags': {
 \       'function': 'ale#fixers#help#AlignTags',
 \       'suggested_filetypes': ['help'],
@@ -31,6 +36,11 @@ let s:default_registry = {
 \       'function': 'ale#fixers#bibclean#Fix',
 \       'suggested_filetypes': ['bib'],
 \       'description': 'Format bib files using bibclean.',
+\   },
+\   'biome': {
+\       'function': 'ale#fixers#biome#Fix',
+\       'suggested_filetypes': ['javascript', 'typescript', 'json', 'jsonc'],
+\       'description': 'Fix JavaScript and TypeScript using biome.',
 \   },
 \   'black': {
 \       'function': 'ale#fixers#black#Fix',
@@ -93,6 +103,11 @@ let s:default_registry = {
 \       'suggested_filetypes': ['javascript', 'css', 'html'],
 \       'description': 'Apply fecs format to a file.',
 \   },
+\   'hurlfmt': {
+\       'function': 'ale#fixers#hurlfmt#Fix',
+\       'suggested_filetypes': ['hurl'],
+\       'description': 'Fix hurl files with hurlfmt.',
+\   },
 \   'tidy': {
 \       'function': 'ale#fixers#tidy#Fix',
 \       'suggested_filetypes': ['html'],
@@ -122,7 +137,7 @@ let s:default_registry = {
 \   },
 \   'eslint': {
 \       'function': 'ale#fixers#eslint#Fix',
-\       'suggested_filetypes': ['javascript', 'typescript'],
+\       'suggested_filetypes': ['javascript', 'typescript', 'astro'],
 \       'description': 'Apply eslint --fix to a file.',
 \   },
 \   'mix_format': {
@@ -137,7 +152,7 @@ let s:default_registry = {
 \   },
 \   'prettier': {
 \       'function': 'ale#fixers#prettier#Fix',
-\       'suggested_filetypes': ['javascript', 'typescript', 'css', 'less', 'scss', 'json', 'json5', 'graphql', 'markdown', 'vue', 'svelte', 'html', 'yaml', 'openapi', 'ruby'],
+\       'suggested_filetypes': ['javascript', 'typescript', 'css', 'less', 'scss', 'json', 'json5', 'graphql', 'markdown', 'vue', 'svelte', 'html', 'yaml', 'openapi', 'ruby', 'astro'],
 \       'description': 'Apply prettier to a file.',
 \   },
 \   'prettier_eslint': {
@@ -174,7 +189,12 @@ let s:default_registry = {
 \   'yamlfix': {
 \       'function': 'ale#fixers#yamlfix#Fix',
 \       'suggested_filetypes': ['yaml'],
-\       'description': 'Fix yaml files with yamlfix.',
+\       'description': 'Fix YAML files with yamlfix.',
+\   },
+\   'yamlfmt': {
+\       'function': 'ale#fixers#yamlfmt#Fix',
+\       'suggested_filetypes': ['yaml'],
+\       'description': 'Format YAML files with yamlfmt.',
 \   },
 \   'yapf': {
 \       'function': 'ale#fixers#yapf#Fix',
@@ -276,6 +296,16 @@ let s:default_registry = {
 \       'suggested_filetypes': ['fish'],
 \       'description': 'Format fish scripts using fish_indent.',
 \   },
+\   'forge': {
+\       'function': 'ale#fixers#forge#Fix',
+\       'suggested_filetypes': ['solidity'],
+\       'description': 'Fix Solidity files with forge fmt.',
+\   },
+\   'gleam_format': {
+\       'function': 'ale#fixers#gleam_format#Fix',
+\       'suggested_filetypes': ['gleam'],
+\       'description': 'Fix Gleam files with gleam format.',
+\   },
 \   'gofmt': {
 \       'function': 'ale#fixers#gofmt#Fix',
 \       'suggested_filetypes': ['go'],
@@ -300,6 +330,11 @@ let s:default_registry = {
 \       'function': 'ale#fixers#gomod#Fix',
 \       'suggested_filetypes': ['gomod'],
 \       'description': 'Fix Go module files with go mod edit -fmt.',
+\   },
+\   'gopls': {
+\       'function': 'ale#fixers#gopls#Fix',
+\       'suggested_filetypes': ['go'],
+\       'description': 'Fix Go files with gopls.',
 \   },
 \   'tslint': {
 \       'function': 'ale#fixers#tslint#Fix',
@@ -526,6 +561,11 @@ let s:default_registry = {
 \       'suggested_filetypes': ['html', 'htmldjango'],
 \       'description': 'Fix HTML files with html-beautify from js-beautify.',
 \   },
+\   'htmlbeautifier': {
+\       'function': 'ale#fixers#htmlbeautifier#Fix',
+\       'suggested_filetypes': ['eruby'],
+\       'description': 'Fix ERB files with htmlbeautifier gem.',
+\   },
 \   'lua-format': {
 \       'function': 'ale#fixers#lua_format#Fix',
 \       'suggested_filetypes': ['lua'],
@@ -548,6 +588,11 @@ let s:default_registry = {
 \   },
 \   'ormolu': {
 \       'function': 'ale#fixers#ormolu#Fix',
+\       'suggested_filetypes': ['haskell'],
+\       'description': 'A formatter for Haskell source code.',
+\   },
+\   'fourmolu': {
+\       'function': 'ale#fixers#fourmolu#Fix',
 \       'suggested_filetypes': ['haskell'],
 \       'description': 'A formatter for Haskell source code.',
 \   },
@@ -585,7 +630,42 @@ let s:default_registry = {
 \       'function': 'ale#fixers#ruff#Fix',
 \       'suggested_filetypes': ['python'],
 \       'description': 'Fix python files with ruff.',
-\   }
+\   },
+\   'ruff_format': {
+\       'function': 'ale#fixers#ruff_format#Fix',
+\       'suggested_filetypes': ['python'],
+\       'description': 'Fix python files with the ruff formatter.',
+\   },
+\   'pycln': {
+\       'function': 'ale#fixers#pycln#Fix',
+\       'suggested_filetypes': ['python'],
+\       'description': 'remove unused python import statements',
+\   },
+\   'rustywind': {
+\       'function': 'ale#fixers#rustywind#Fix',
+\       'suggested_filetypes': ['html'],
+\       'description': 'Sort Tailwind CSS classes',
+\   },
+\   'npm-groovy-lint': {
+\       'function': 'ale#fixers#npmgroovylint#Fix',
+\       'suggested_filetypes': ['groovy'],
+\       'description': 'Fix Groovy files with npm-groovy-fix.',
+\   },
+\   'erb-formatter': {
+\       'function': 'ale#fixers#erbformatter#Fix',
+\       'suggested_filetypes': ['eruby'],
+\       'description': 'Apply erb-formatter -w to eruby/erb files.',
+\   },
+\   'nickel_format': {
+\       'function': 'ale#fixers#nickel_format#Fix',
+\       'suggested_filetypes': ['nickel'],
+\       'description': 'Fix nickel files with nickel format',
+\   },
+\   'rubyfmt': {
+\       'function': 'ale#fixers#rubyfmt#Fix',
+\       'suggested_filetypes': ['ruby'],
+\       'description': 'A formatter for Ruby source code',
+\   },
 \}
 
 " Reset the function registry to the default entries.
