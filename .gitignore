@@ -8,3 +8,5 @@ coding/openai/*.mp3
 coding/openai/*.jpg
 virt/user-data
 virt/vm_key*
+content
+*.deb
