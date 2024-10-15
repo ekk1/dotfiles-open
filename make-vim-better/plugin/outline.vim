@@ -39,6 +39,7 @@ endif
 if !exists('g:outline_include_before_exclude')
 g:outline_include_before_exclude = {
             \ "go": false,
+            \ "markdown": false,
             \ "python": false,
             \ "vim": false
             \ }
@@ -47,6 +48,7 @@ endif
 if !exists('g:outline_pattern_to_include')
 g:outline_pattern_to_include = {
             \ "go": ['^func', '^type', 'TODO'],
+            \ "markdown": ['^# \d'],
             \ "python": ['^class', '^\s*def'],
             \ "vim": ['^\s*export', '^\s*def', '^\S*map',
                 \ '^\s*\(autocmd\|autocommand\)', '^\s*\(command\|cmd\)',
@@ -57,6 +59,7 @@ endif
 if !exists('g:outline_pattern_to_exclude')
 g:outline_pattern_to_exclude = {
             \ "go": ['^\/\/'],
+            \ "markdown": ['^\/\/'],
             \ "python": ['^\s*def\s_\{-1,2}'],
             \ "vim": ['^\s*#']
             \ }
