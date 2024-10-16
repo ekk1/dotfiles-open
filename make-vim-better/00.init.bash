@@ -9,25 +9,19 @@
 # syn match markdownListMarker "\%(\t\| \{0,32\}\)[-*+]\%(\s\+\S\)\@=" contained
 # syn match markdownOrderedListMarker "\%(\t\| \{0,16}\)\<\d\+\.\%(\s\+\S\)\@=" contained
 
-# edit vimrc
-# change this line
-# vimJumpCacheLocation
-# CheetSheetLocation can be deleted
-#
-# use Space+m to save a file to avoid error
-
 echo "[MESSAGES CONTROL]" > ~/.pylintrc
 echo "disable=C0103" >> ~/.pylintrc
 cp vimrc ~/.vimrc
-sed -i "s|/user/|/$USER/|" ~/.vimrc
-sed -i "s/\" packadd/packadd/g" ~/.vimrc
-echo "$HOME/.vimrc" >> ~/.vim_jump_cache
 
-# vam list
-# echo "Use vam install youcompleteme to finish install"
-
-mkdir -p ~/.vim/doc ~/.vim/ftplugin ~/.vim/lib/ftfunctions ~/.vim/plugin
+# Install Outline
+mkdir -p ~/.vim/ftplugin ~/.vim/lib/ftfunctions ~/.vim/plugin ~/.vim/syntax
 cp ftplugin/*.vim ~/.vim/ftplugin/
 cp lib/*.vim ~/.vim/lib/
 cp lib/ftfunctions/*.vim ~/.vim/lib/ftfunctions/
 cp plugin/*.vim ~/.vim/plugin/
+
+# Install 3rd-party plugins (from debian's repo)
+mkdir -p ~/.vim/pack/git-plugins/start/
+cp 3rdparty/ale-deb ~/.vim/pack/git-plugins/start/
+cp 3rdparty/vim-airline ~/.vim/pack/git-plugins/start/
+cp 3rdparty/ctrlp.vim-deb ~/.vim/pack/git-plugins/start/
