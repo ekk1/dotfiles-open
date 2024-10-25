@@ -23,6 +23,9 @@ set -o errexit
 # now C+] exits
 # vm test arch.iso sf + s to login ssh
 # follow install procedure
+#
+# Use guestfwd=tcp:10.0.2.100:8118-tcp:127.0.0.1:8118
+# to allow guest access http proxy directly
 
 if [[ -z $1 || -z $2 || -z $3 ]] ; then
     echo "bash 31.create.vm.sh disk cdrom action [kvm] [dry]"
