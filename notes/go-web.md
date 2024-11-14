@@ -2,7 +2,12 @@
 
 ```bash
 # Test without cache
-GOFLAGS="-count=1" go test 
+GOFLAGS="-count=1" go test -v -run xxx
+
+GOFLAGS="-count=1" go test -v -cpuprofile cpu.prof -memprofile mem.prof
+go tool pprof xxx
+top10 -cum
+top10
 
 
 # runs at 127.0.0.1:5000/post
