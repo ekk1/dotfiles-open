@@ -27,6 +27,9 @@ set -o errexit
 # Use guestfwd=tcp:10.0.2.100:8118-tcp:127.0.0.1:8118   (one time)
 # Use 'user...guestfwd=tcp:10.0.2.100:8118-cmd:nc 127.0.0.1 8118'   (all the time)
 # to allow guest access http proxy directly
+#
+# For windows XP install, modify some parameters
+# -m 2G  -hda winxp.qcow2 -cdrom xp.iso -device rtl8139,netdev=netout -vga cirrus (no -machine)
 
 if [[ -z $1 || -z $2 || -z $3 ]] ; then
     echo "bash 31.create.vm.sh disk cdrom action [kvm] [dry]"
