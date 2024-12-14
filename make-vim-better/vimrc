@@ -395,21 +395,24 @@ endfunc
 
 " OpenAI
 function! CallAI()
-    let selected_text = getline(g:fffst, g:lllst)
-    "let selected_text = join(getline(g:fffst, g:lllst), "\n")
-
-    let temp_dir = ''
-    if has('unix')
-        let temp_dir = '/dev/shm'
+    if exists('g:mode')
+        let run_cmd = printf("openai -m claude-3-5-sonnet-20241022 -q -p \"%s\"", g:iiinput)
     else
-        let temp_dir = fnamemodify(tempname(), ':h')
+        let selected_text = getline(g:fffst, g:lllst)
+
+        let temp_dir = ''
+        if has('unix')
+            let temp_dir = '/dev/shm'
+        else
+            let temp_dir = fnamemodify(tempname(), ':h')
+        endif
+
+        let temp_file = temp_dir . '/vim_temp_' . getpid() . '_' . localtime()
+
+        call writefile(selected_text, temp_file)
+
+        let run_cmd = printf("openai -m claude-3-5-sonnet-20241022 -q -i %s -p \"%s\" -n \"%s\"", temp_file, g:iiinput, expand('%:t'))
     endif
-
-    let temp_file = temp_dir . '/vim_temp_' . getpid() . '_' . localtime()
-
-    call writefile(selected_text, temp_file)
-
-    let run_cmd = printf("cd /path/to/go_utils/cmd/openai ; ./openai -m claude-3-5-sonnet-20241022 -i %s -p \"%s\" -n \"%s\"", temp_file, g:iiinput, expand('%:t'))
 
     let response = system(run_cmd)
 
@@ -417,19 +420,28 @@ function! CallAI()
     let l:complete = &complete
     set completeopt=
     set complete=
-    " call append(line("'>"), split(response, "\n"))
-    call append(g:lllst, split(response, "\n"))
+
+    if exists('g:mode')
+        call append(getline("."), split(response, "\n"))
+    else
+        call append(g:lllst, split(response, "\n"))
+    endif
 
     let &completeopt = l:completeopt
     let &complete = l:complete
 
-    "unlet g:fffst
-    "unlet g:lllst
+    if exists('g:mode')
+        unlet g:mode
+    endif
+
+endfunction
+
+function! CreateInputPopupNormal() range
+    let g:mode = "1"
+    call CreateInputPopup()
 endfunction
 
 function! CreateInputPopup() range
-    " echom a:firstline
-    " echom a:lastline
     let g:fffst = a:firstline
     let g:lllst = a:lastline
     let opts = {
@@ -470,3 +482,4 @@ function! InputPopupCallback(winid, result)
 endfunction
 
 vnoremap <space>k   :call CreateInputPopup()<CR>
+nnoremap <space>k   :call CreateInputPopupNormal()<CR>
