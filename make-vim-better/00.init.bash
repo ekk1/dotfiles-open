@@ -22,6 +22,6 @@ cp plugin/*.vim ~/.vim/plugin/
 
 # Install 3rd-party plugins (from debian's repo)
 mkdir -p ~/.vim/pack/git-plugins/start/
-cp 3rdparty/ale-deb ~/.vim/pack/git-plugins/start/
-cp 3rdparty/vim-airline ~/.vim/pack/git-plugins/start/
-cp 3rdparty/ctrlp.vim-deb ~/.vim/pack/git-plugins/start/
+cp -r 3rdparty/ale-deb ~/.vim/pack/git-plugins/start/
+cp -r 3rdparty/vim-airline ~/.vim/pack/git-plugins/start/
+cp -r 3rdparty/ctrlp.vim-deb ~/.vim/pack/git-plugins/start/
