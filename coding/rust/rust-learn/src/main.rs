@@ -12,7 +12,7 @@ fn main() {
     loop {
         println!("Input guess: ");
 
-        let mut guess = String::new();
+        let mut guess: String = String::new();
 
         io::stdin()
             .read_line(&mut guess) // Use &mut to create mutable ref

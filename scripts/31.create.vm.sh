@@ -152,7 +152,7 @@ if [[ $3 == "w" ]] ; then
     basic_params+=" -m 8G -smp 4"
     basic_params+=" -drive file=$1.qcow2"
     basic_params+=" -cdrom $2"
-    basic_params+=" -netdev user,id=netout,hostname=testvmw,restrict=on,hostfwd=tcp:127.0.0.1:2231-:3389"
+    basic_params+=" -netdev 'user,id=netout,hostname=testvmw,restrict=on,hostfwd=tcp:127.0.0.1:2231-:3389,guestfwd=tcp:10.0.2.100:8118-cmd:nc 127.0.0.1 8118'"
     basic_params+=" -device e1000,netdev=netout"
     basic_params+=" -usb -device usb-tablet"
     basic_params+=" -machine pc-q35-7.2"
@@ -165,7 +165,7 @@ else
     if [[ $3 == "a" ]]; then
         basic_params+=" -cdrom $2"
     fi
-    basic_params+=" -netdev user,id=netout,hostname=testvm,restrict=on,hostfwd=tcp:127.0.0.1:2221-:22"
+    basic_params+=" -netdev 'user,id=netout,hostname=testvm,restrict=on,hostfwd=tcp:127.0.0.1:2221-:22,guestfwd=tcp:10.0.2.100:8118-cmd:nc 127.0.0.1 8118'"
     basic_params+=" -device virtio-net,netdev=netout"
     basic_params+=" -device virtio-rng-pci"
     basic_params+=" -name \"testvm\""
@@ -176,7 +176,7 @@ basic_params+=" -vnc 127.0.0.1:11"
 basic_params+=" -monitor tcp:127.0.0.1:6001,server,nowait"
 basic_params+=" -serial tcp:127.0.0.1:5001,server,nowait"
 basic_params+=" -sandbox on"
-basic_params+=" -daemonize"
+#basic_params+=" -daemonize"
 basic_params+=" -display none"
 
 if [[ ! -z $4 ]] ; then
