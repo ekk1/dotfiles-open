@@ -32,6 +32,7 @@ set -o errexit
 # -m 2G  -hda winxp.qcow2 -cdrom xp.iso -device rtl8139,netdev=netout -vga cirrus (no -machine)
 
 if [[ -z $1 || -z $2 || -z $3 ]] ; then
+    echo "ssh sa@127.0.0.1 -p 2221 -R 127.0.0.1:8118:127.0.0.1:8118 -L 127.0.0.1:11434:127.0.0.1:11434 -L 127.0.0.1:7777:127.0.0.0.1:7777"
     echo "bash 31.create.vm.sh disk cdrom action [kvm] [dry]"
     echo "disk dont need qcow2 suffix"
     echo "cdrom is a must"
