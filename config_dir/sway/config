@@ -12,7 +12,7 @@ set $menu dmenu_path | dmenu | xargs swaymsg exec --
 
 output * {
     # Install hyprland
-    bg /usr/share/hyprland/wall2.png fill
+    bg /usr/share/hypr/wall2.png fill
     # scale and mode can be setup later, run sway directly and use swaymsg -t get_outputs to get monitors and modes
     # scale 2
     # position 0 0  # Note: position is divided by scale
@@ -27,11 +27,11 @@ output * {
 # workspace 2 output DP-1
 
 exec swayidle -w \
-        timeout 300 'swaylock -f -c 00ffff -e -i /usr/share/hyprland/wall2.png' \
+        timeout 300 'swaylock -f -c 00ffff -e -i /usr/share/hypr/wall2.png' \
         timeout 360 'swaymsg "output * power off"' \
         timeout 60 'if pgrep -x swaylock; then swaymsg "output * power off"; fi' \
         resume 'swaymsg "output * power on"' \
-        before-sleep 'swaylock -f -c 00ffff -e -i /usr/share/hyprland/wall2.png'
+        before-sleep 'swaylock -f -c 00ffff -e -i /usr/share/hypr/wall2.png'
 
 input "type:keyboard" {
     xkb_options ctrl:nocaps
@@ -69,7 +69,7 @@ bindsym $mod+Shift+Left move left
 bindsym $mod+Shift+Down move down
 bindsym $mod+Shift+Up move up
 bindsym $mod+Shift+Right move right
-bindsym $mod+Ctrl+l exec swaylock -f -c 00ffff -e -i /usr/share/hyprland/wall2.png
+bindsym $mod+Ctrl+l exec swaylock -f -c 00ffff -e -i /usr/share/hypr/wall2.png
 bindsym $mod+1 workspace number 1
 bindsym $mod+2 workspace number 2
 bindsym $mod+3 workspace number 3
