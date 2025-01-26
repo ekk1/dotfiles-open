@@ -19,6 +19,8 @@ identify -format "%n\n" xxx.pdf | head -1
 convert -density 200 1.pdf[0] output.jpg
 convert -density 200 1.pdf[1-2] output.jpg
 convert -density 200 1.pdf[1-2] output_%d.jpg
+convert -density 300 -trim test.pdf -quality 100 test.jpg
+convert -density 300 -trim test.pdf[0] -quality 100 test.jpg
 
 # AI
 ./llama.cpp/build/bin/llama-minicpmv-cli -m ../../Model-7.6B-Q8_0.gguf --mmproj ../../mmproj-model-f16.gguf -c 4096 --temp 0.7 --top-p 0.8 --top-k 100 --repeat-penalty 1.05 --image ../../output.jpg  -p "请识别图中的文字，按 markdown 的格式写出来，不要遗漏任何信息"
