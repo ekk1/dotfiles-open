@@ -12,7 +12,7 @@ if [[ $yn == "y" ]]; then
         powerline tk wget \
         linux-firmware-qlogic \
         neofetch openssh helix zellij fish \
-        imagemagick ghostscript
+        imagemagick ghostscript chafa
 fi
 
 read -p "Do you wish to install GUI?" yn
@@ -56,8 +56,8 @@ fi
 read -p "Do you wish to install kvm tools?" yn
 if [[ $yn == "y" ]]; then
     pacman -S \
-        qemu-full libvirt virt-manager \
-        dnsmasq dmidecode ovmf \
+        qemu-full \
+        dmidecode ovmf \
         remmina freerdp libvncserver
 fi
 
