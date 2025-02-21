@@ -34,6 +34,11 @@ if [[ $yn == "y" ]]; then
     pacman -S vulkan-intel vulkan-tools
 fi
 
+read -p "Do you wish to install vulkan amd driver?" yn
+if [[ $yn == "y" ]]; then
+    pacman -S vulkan-radeon
+fi
+
 read -p "Do you wish to install fonts?" yn
 if [[ $yn == "y" ]]; then
     pacman -S \
@@ -156,6 +161,19 @@ cat << EOF > /root/06-restart-network-service.sh
 systemctl restart systemd-resolved
 sleep 2
 systemctl restart chronyd
+EOF
+
+cat << EOF > /root/06-bluetooth.sh
+# bluetoothctl
+# power on
+# agent KeyboardOnly
+# default-agent
+# pairable on
+# scan on
+# pair 01:02:03:04:05:06
+# trust 01:02:03:04:05:06
+# connect 01:02:03:04:05:06
+# quit
 EOF
 
 cat << EOF > /root/02-list-nfs-mount.sh
