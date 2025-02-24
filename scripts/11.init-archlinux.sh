@@ -176,6 +176,14 @@ cat << EOF > /root/06-bluetooth.sh
 # quit
 EOF
 
+cat << EOF > /root/07-lid.sh
+HandlePowerKey=ignore
+HandlePowerKeyLongPress=ignore
+HandleLidSwitch=ignore
+HandleLidSwitchExternalPower=ignore
+HandleLidSwitchDocked=ignore
+EOF
+
 cat << EOF > /root/02-list-nfs-mount.sh
 showmount -e 192.168.xxx
 EOF
