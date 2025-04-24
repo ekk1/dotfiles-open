@@ -4,6 +4,27 @@ apt install fonts-noto-cjk fonts-noto-mono \
     fonts-font-awesome fonts-powerline \
     fonts-ubuntu-console
 
+apt install fonts-noto-cjk fonts-wqy-microhei fonts-wqy-zenhei
+
+mkdir -p ~/.config/fontconfig
+vim ~/.config/fontconfig/fonts.conf
+
+# this helps terminal to use better chinese font as fallback
+cat << EOF > fonts.conf
+<?xml version="1.0"?>
+<!DOCTYPE fontconfig SYSTEM "fonts.dtd">
+<fontconfig>
+  <match target="pattern">
+    <test name="family">
+      <string>Ubuntu Mono</string>
+    </test>
+    <edit name="family" mode="append" binding="strong">
+      <string>WenQuanYi Micro Hei</string>
+    </edit>
+  </match>
+</fontconfig>
+EOF
+
 # GUI Tools
 apt install gimp
 apt install -t bookworm-backports yt-dlp
