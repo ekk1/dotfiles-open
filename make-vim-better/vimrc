@@ -84,6 +84,7 @@ nnoremap <leader>g  :ALEGoToDefinition<CR>
 nnoremap <leader>f  :ALEFindReferences<CR>
 nnoremap <leader>s  :ALESymbolSearch<CR>
 nnoremap <leader>m  :ALEHover<CR>
+nnoremap <leader>r  :ALERename<CR>
 nnoremap <space>h   <C-O>
 
 inoremap jkk <esc>

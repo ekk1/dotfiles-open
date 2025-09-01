@@ -1,0 +1,15 @@
+qemu-system-x86_64 \
+    -m 4G -smp 1 \
+    -drive file=win.qcow2 \
+    -cdrom Win10_22H2_Chinese_Simplified_x64v1.iso \
+    -netdev 'user,id=netout,hostname=testvmw,restrict=on,hostfwd=tcp:127.0.0.1:2231-:3389,guestfwd=tcp:10.0.2.100:8118-cmd:nc -q 0 127.0.0.1 9902' \
+    -device e1000,netdev=netout \
+    -usb -device usb-tablet \
+    -machine pc-q35-7.2 \
+    -name "testvmw" \
+    -boot menu=on \
+    -vnc 127.0.0.1:12 \
+    -monitor tcp:127.0.0.1:6002,server,nowait \
+    -serial tcp:127.0.0.1:5002,server,nowait \
+    -sandbox on -display none \
+    -enable-kvm -cpu host
