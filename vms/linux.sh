@@ -12,3 +12,9 @@ qemu-system-x86_64 \
     -serial tcp:127.0.0.1:5001,server,nowait \
     -sandbox on -display none \
     -enable-kvm -cpu host
+
+# for testing with KMS, might need 3D accel
+#
+# -vga none \
+# -display gtk,gl=on \
+# -device virtio-vga-gl \
