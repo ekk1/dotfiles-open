@@ -1,0 +1,70 @@
+---
+port: 7890
+socks-port: 10098
+redir-port: 7892
+tproxy-port: 7893
+allow-lan: true
+mode: rule
+log-level: info
+ipv6: false
+external-controller: 127.0.0.1:9090
+dns:
+  enable: true
+  listen: 0.0.0.0:53
+  default-nameserver:
+    - 114.114.114.114
+  enhanced-mode: fake-ip # or fake-ip
+  fake-ip-range: 198.18.0.1/16 # Fake IP addresses pool CIDR
+  nameserver:
+    - 114.114.114.114 # default value
+  fake-ip-filter:
+    - '*.lan'
+    - 'time.windows.com'
+    - 'time.nist.gov'
+    - 'time.apple.com'
+    - 'time.asia.apple.com'
+    - '*.ntp.org.cn'
+    - '*.pool.ntp.org'
+
+proxies:
+  # socks5
+  #- name: "socks"
+    #type: socks5
+    #server: 127.0.0.1
+    #port: 10099
+    #udp: true
+
+  - name: "ss"
+    type: ss
+    server: 
+    port: 
+    password: 
+    cipher: aes-256-gcm
+
+  - name: "tro"
+    type: trojan
+    server: 
+    port: 
+    password: 
+    sni: 
+    skip-cert-verify: true
+
+proxy-groups:
+  - name: "all"
+    type: select
+    proxies:
+      - ss
+
+  - name: "trojan"
+    type: select
+    proxies:
+      - tro
+
+rules:
+  - DOMAIN-SUFFIX,115.com,DIRECT
+  - DOMAIN-SUFFIX,116cd.com,DIRECT
+  - DOMAIN-SUFFIX,115vod.com,DIRECT
+  - DOMAIN-SUFFIX,115cdn.net,DIRECT
+  - DOMAIN-SUFFIX,cnzz.com,DIRECT
+  #- SRC-IP-CIDR,192.168.0.1/32,all
+  - MATCH,all
