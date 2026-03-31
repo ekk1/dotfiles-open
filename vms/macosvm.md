@@ -3,26 +3,35 @@
 ## Prepare
 
 virtio 驱动去 Fedora 官网下载
-https://fedorapeople.org/groups/virt/virtio-win/direct-downloads/latest-virtio/virtio-win.iso
+
+`https://fedorapeople.org/groups/virt/virtio-win/direct-downloads/latest-virtio/virtio-win.iso`
 
 TPM 限制则是在安装时候跳过
 
-Shift + F10
-regedit
-HKEY_LOCAL_MACHINE\SYSTEM\Setup
-新建 LabConfig 项
+`Shift + F10`
+
+`regedit`
+
+`HKEY_LOCAL_MACHINE\SYSTEM\Setup`
+
+新建 `LabConfig` 项
 新建两个值 DWORD (32位)
-BypassTPMCheck = 1
-BypassSecureBootCheck = 1
+
+`BypassTPMCheck = 1`
+`BypassSecureBootCheck = 1`
 
 磁盘驱动在
-virtio-win.iso 的 viostor/w11/ARM64
+virtio-win.iso 的 `viostor/w11/ARM64`
 
 网络跳过也是
-Shift + F10
-OOBE\BYPASSNRO
+
+`Shift + F10`
+
+`OOBE\BYPASSNRO`
 
 宿主机准备就是
+
+```bash
 xcode-select --install
 mkdir -p ~/VM/Win11
 vim ~/VM/Win11/main.swift
@@ -43,6 +52,7 @@ EOF
 
 codesign --entitlements entitlements.plist --force -s - win11vm
 ./win11vm
+```
 
 Linux 基本也是一样，改改几个写死的文件的地址就好了，其他自己看情况调整
 
